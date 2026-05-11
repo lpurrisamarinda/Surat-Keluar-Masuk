@@ -405,6 +405,8 @@ td{padding:9px 12px;vertical-align:middle}
   .btn-hdr{display:none} /* sembunyikan btn refresh di header */
 }
 
+.app-content.hidden{display:none}
+
 /* ══════════════════════════════════════════
    PRINT
 ══════════════════════════════════════════ */
@@ -432,6 +434,8 @@ td{padding:9px 12px;vertical-align:middle}
     <div class="login-footer">Data login akan diverifikasi langsung dari Google Sheets.</div>
   </div>
 </div>
+
+<div class="app-content hidden" id="app-content">
 
 <!-- ══ HEADER ══ -->
 <header class="header">
@@ -615,6 +619,7 @@ td{padding:9px 12px;vertical-align:middle}
   </footer>
 
 </main>
+</div>
 
 <!-- EDIT MODAL -->
 <div class="modal-ov" id="edit-modal" onclick="if(event.target===this)closeEdit()" role="dialog" aria-modal="true" aria-labelledby="edit-title">
@@ -682,6 +687,8 @@ let page=1,perPage=25;
 const $=id=>document.getElementById(id);
 function showLogin(){ $('login-screen').classList.remove('hidden'); }
 function hideLogin(){ $('login-screen').classList.add('hidden'); }
+function showApp(){ $('app-content').classList.remove('hidden'); }
+function hideApp(){ $('app-content').classList.add('hidden'); }
 async function doLogin(){
   const user=($('login-user').value||'').trim();
   const pass=($('login-pass').value||'').trim();
@@ -689,7 +696,7 @@ async function doLogin(){
   const btn=$('btn-login');btn.disabled=true;btn.textContent='🔒 Memeriksa...';$('login-error').textContent='';
   try{
     const res=await gasPost({action:'login',username:user,password:pass});
-    if(res.status==='success'){currentUser={username:user};hideLogin();init();toast('✅ Selamat datang, '+user+'!');}
+    if(res.status==='success'){currentUser={username:user};hideLogin();showApp();init();toast('✅ Selamat datang, '+user+'!');}
     else{$('login-error').textContent=res.message||'Login gagal. Periksa kembali data Anda.';}
   }catch(e){$('login-error').textContent='Gagal koneksi: '+e.message;}
   btn.disabled=false;btn.textContent='🔒 Masuk';
@@ -1094,6 +1101,7 @@ function renderTable(){
 }
 
 // ── START ──────────────────────────────────────
+hideApp();
 showLogin();
 
 // Keyboard: Escape menutup modal
