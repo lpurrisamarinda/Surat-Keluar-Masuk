@@ -1,436 +1,436 @@
-﻿<!DOCTYPE html>
-<html lang="id">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Aplikasi Surat Keluar dan Masuk modular dengan persiapan Google Apps Script.">
-  <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <title>Surat Keluar & Masuk</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-p5Qf9v+0Mc0oO5uMX6i9FZ4ZTEYu5VxO5Okp2PESJzCf8Ka9f7LHbkZbsV6IF7xs" crossorigin="anonymous">
-  <link rel="stylesheet" href="styles/main.css">
-</head>
-<body>
-  <a href="#main-content" class="skip-link">Langsung ke konten utama</a>
-  <div id="offline-bar" class="offline-bar" role="status" aria-live="polite">📡 Offline. Data mungkin disajikan dari cache.</div>
-
-  <main class="container-fluid p-0">
-    <section id="login-screen" class="vh-100 d-flex align-items-center justify-content-center bg-light">
-      <div class="card rounded-4 shadow-sm login-card" style="max-width: 420px; width: 100%;" aria-label="Login aplikasi">
-        <div class="card-body p-4">
-          <h1 class="h4 mb-2">Masuk ke Surat Keluar & Masuk</h1>
-          <p class="text-muted mb-4">Gunakan akun terdaftar untuk mengelola Surat Masuk dan Surat Keluar.</p>
-          <form id="login-form" novalidate>
-            <div class="mb-3">
-              <label for="login-user" class="form-label">Username</label>
-              <input id="login-user" class="form-control" type="text" autocomplete="username" required>
-            </div>
-            <div class="mb-3">
-              <label for="login-pass" class="form-label">Password</label>
-              <input id="login-pass" class="form-control" type="password" autocomplete="current-password" required>
-            </div>
-            <div id="login-error" class="text-danger small mb-3" role="alert" aria-live="assertive"></div>
-            <button type="submit" class="btn btn-primary w-100">🔒 Masuk</button>
-          </form>
-          <p class="text-muted text-center mt-4 mb-0">Aplikasi siap diintegrasikan dengan Google Apps Script dan Google Sheets.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="app-screen" class="app-shell p-0 d-none">
-      <header class="header-app text-white">
-        <div class="container py-3">
-          <div class="row align-items-center gy-3">
-            <div class="col-md">
-              <div class="d-flex flex-column gap-2">
-                <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
-                  <div>
-                    <h1 id="app-title" class="h4 mb-1">Surat Keluar & Masuk</h1>
-                    <p class="mb-0 text-white-75">Dashboard manajemen surat dengan fitur modular dan tab terpisah.</p>
-                  </div>
-                  <div class="d-flex gap-2 flex-wrap">
-                    <button id="theme-toggle" type="button" class="btn btn-outline-light btn-sm" aria-label="Toggle theme">🌙</button>
-                    <button id="btn-refresh" type="button" class="btn btn-outline-light btn-sm">🔄 Refresh</button>
-                    <button id="btn-logout" type="button" class="btn btn-light btn-sm text-primary">Keluar</button>
-                    <span id="app-version" class="badge bg-white text-primary align-self-center">v1.0</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </header>
-
-      <section class="container py-4" id="main-content">
-        <div class="d-flex flex-column flex-md-row align-items-start justify-content-between gap-3 mb-4">
-          <div>
-            <p class="text-muted mb-1">Selamat datang</p>
-            <h2 class="h5 mb-0">Kelola Surat Masuk dan Surat Keluar</h2>
-          </div>
-          <nav>
-            <div class="nav nav-pills" role="tablist" aria-label="Pilih modul surat">
-              <button id="nav-incoming" class="nav-link active" type="button" role="tab">Surat Masuk</button>
-              <button id="nav-outgoing" class="nav-link" type="button" role="tab">Surat Keluar</button>
-            </div>
-          </nav>
-        </div>
-
-        <div class="row row-cols-1 row-cols-xl-3 g-3 mb-4">
-          <div class="col">
-            <div class="card card-soft p-3 h-100">
-              <div class="d-flex align-items-center justify-content-between mb-2">
-                <span class="text-uppercase small text-muted">Total Surat Masuk</span>
-                <span class="badge bg-primary">Masuk</span>
-              </div>
-              <h3 id="incoming-count" class="mb-0">0 surat masuk</h3>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card card-soft p-3 h-100">
-              <div class="d-flex align-items-center justify-content-between mb-2">
-                <span class="text-uppercase small text-muted">Total Surat Keluar</span>
-                <span class="badge bg-success">Keluar</span>
-              </div>
-              <h3 id="outgoing-count" class="mb-0">0 surat keluar</h3>
-            </div>
-          </div>
-          <div class="col">
-            <div class="card card-soft p-3 h-100">
-              <div class="d-flex align-items-center justify-content-between mb-2">
-                <span class="text-uppercase small text-muted">Status Backend</span>
-                <span id="backend-status" class="badge bg-info text-dark">Siap</span>
-              </div>
-              <p class="mb-0 text-muted small">Google Apps Script ditujukan sebagai backend REST-like.</p>
-            </div>
-          </div>
-        </div>
-
-        <section id="section-incoming" class="tab-pane active">
-          <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3 mb-3">
-            <div>
-              <h3 class="h6 mb-1">Daftar Surat Masuk</h3>
-              <p class="text-muted small mb-0">Filter dan kelola Surat Masuk secara cepat.</p>
-            </div>
-            <button id="incoming-add-button" type="button" class="btn btn-primary">+ Tambah Surat Masuk</button>
-          </div>
-
-          <div class="card card-soft mb-4">
-            <div class="card-body">
-              <div class="row g-3">
-                <div class="col-md-4">
-                  <label class="form-label">Cari</label>
-                  <input id="incoming-search" type="search" class="form-control" placeholder="Cari nomor, pengirim, atau perihal">
-                </div>
-                <div class="col-md-2">
-                  <label class="form-label">Status</label>
-                  <select id="incoming-status" class="form-select">
-                    <option value="">Semua Status</option>
-                    <option>Belum</option>
-                    <option>Proses</option>
-                    <option>Selesai</option>
-                  </select>
-                </div>
-                <div class="col-md-2">
-                  <label class="form-label">Dari</label>
-                  <input id="incoming-from" type="date" class="form-control">
-                </div>
-                <div class="col-md-2">
-                  <label class="form-label">Sampai</label>
-                  <input id="incoming-to" type="date" class="form-control">
-                </div>
-                <div class="col-md-2 d-flex align-items-end gap-2">
-                  <button id="incoming-export-csv" type="button" class="btn btn-outline-primary w-100">CSV</button>
-                  <button id="incoming-export-excel" type="button" class="btn btn-outline-success w-100">Excel</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card card-soft mb-4">
-            <div class="table-responsive">
-              <table class="table table-hover align-middle mb-0">
-                <thead>
-                  <tr>
-                    <th>Nomor Surat</th>
-                    <th>Tanggal Masuk</th>
-                    <th>Pengirim</th>
-                    <th>Perihal</th>
-                    <th>Sifat Surat</th>
-                    <th>Status</th>
-                    <th>Lampiran</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="incoming-table-body"></tbody>
-              </table>
-            </div>
-            <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
-              <div id="incoming-pager" class="text-muted small">Menampilkan 0 dari 0</div>
-              <div class="d-flex align-items-center gap-2">
-                <label class="mb-0 small">Baris/hal</label>
-                <select id="incoming-per-page" class="form-select form-select-sm" style="width: auto;">
-                  <option value="10">10</option>
-                  <option value="25" selected>25</option>
-                  <option value="50">50</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="section-outgoing" class="tab-pane d-none">
-          <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3 mb-3">
-            <div>
-              <h3 class="h6 mb-1">Daftar Surat Keluar</h3>
-              <p class="text-muted small mb-0">Kelola Surat Keluar dengan status Draft dan Terkirim.</p>
-            </div>
-            <button id="outgoing-add-button" type="button" class="btn btn-success">+ Tambah Surat Keluar</button>
-          </div>
-
-          <div class="card card-soft mb-4">
-            <div class="card-body">
-              <div class="row g-3">
-                <div class="col-md-4">
-                  <label class="form-label">Cari</label>
-                  <input id="outgoing-search" type="search" class="form-control" placeholder="Cari nomor, tujuan, atau perihal">
-                </div>
-                <div class="col-md-2">
-                  <label class="form-label">Status</label>
-                  <select id="outgoing-status" class="form-select">
-                    <option value="">Semua Status</option>
-                    <option>Draft</option>
-                    <option>Terkirim</option>
-                  </select>
-                </div>
-                <div class="col-md-2">
-                  <label class="form-label">Dari</label>
-                  <input id="outgoing-from" type="date" class="form-control">
-                </div>
-                <div class="col-md-2">
-                  <label class="form-label">Sampai</label>
-                  <input id="outgoing-to" type="date" class="form-control">
-                </div>
-                <div class="col-md-2 d-flex align-items-end gap-2">
-                  <button id="outgoing-export-csv" type="button" class="btn btn-outline-primary w-100">CSV</button>
-                  <button id="outgoing-export-excel" type="button" class="btn btn-outline-success w-100">Excel</button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="card card-soft mb-4">
-            <div class="table-responsive">
-              <table class="table table-hover align-middle mb-0">
-                <thead>
-                  <tr>
-                    <th>Nomor Surat</th>
-                    <th>Tanggal Surat</th>
-                    <th>Tujuan Surat</th>
-                    <th>Perihal</th>
-                    <th>Sifat Surat</th>
-                    <th>Status</th>
-                    <th>Lampiran</th>
-                    <th>Aksi</th>
-                  </tr>
-                </thead>
-                <tbody id="outgoing-table-body"></tbody>
-              </table>
-            </div>
-            <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
-              <div id="outgoing-pager" class="text-muted small">Menampilkan 0 dari 0</div>
-              <div class="d-flex align-items-center gap-2">
-                <label class="mb-0 small">Baris/hal</label>
-                <select id="outgoing-per-page" class="form-select form-select-sm" style="width: auto;">
-                  <option value="10">10</option>
-                  <option value="25" selected>25</option>
-                  <option value="50">50</option>
-                </select>
-              </div>
-            </div>
-          </div>
-        </section>
-      </section>
-    </section>
-  </main>
-
-  <div id="incoming-modal" class="modal-wrapper">
-    <div class="modal-card">
-      <div class="modal-header d-flex align-items-center justify-content-between">
-        <div>
-          <h5 class="mb-1">Form Surat Masuk</h5>
-          <p class="text-muted small mb-0">Lengkapi data berikut untuk menambahkan atau mengubah Surat Masuk.</p>
-        </div>
-        <button type="button" class="btn-close modal-close" aria-label="Tutup"></button>
-      </div>
-      <form id="incoming-form" class="modal-body" novalidate>
-        <div class="row g-3">
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Nomor Surat</label>
-            <input name="noSurat" type="text" class="form-control" required>
-            <div class="invalid-feedback"></div>
-          </div>
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Tanggal Masuk</label>
-            <input name="tanggalMasuk" type="date" class="form-control" required>
-            <div class="invalid-feedback"></div>
-          </div>
-          <div class="col-12 mb-3">
-            <label class="form-label">Pengirim</label>
-            <input name="pengirim" type="text" class="form-control" required>
-            <div class="invalid-feedback"></div>
-          </div>
-          <div class="col-12 mb-3">
-            <label class="form-label">Perihal</label>
-            <textarea name="perihal" rows="3" class="form-control" required></textarea>
-            <div class="invalid-feedback"></div>
-          </div>
-          <div class="col-md-4 mb-3">
-            <label class="form-label">Sifat Surat</label>
-            <select name="sifatSurat" class="form-select" required>
-              <option value="">Pilih sifat</option>
-              <option>Biasa</option>
-              <option>Penting</option>
-              <option>Rahasia</option>
-            </select>
-            <div class="invalid-feedback"></div>
-          </div>
-          <div class="col-md-4 mb-3">
-            <label class="form-label">Status</label>
-            <select name="status" class="form-select" required>
-              <option value="">Pilih status</option>
-              <option>Belum</option>
-              <option>Proses</option>
-              <option>Selesai</option>
-            </select>
-            <div class="invalid-feedback"></div>
-          </div>
-          <div class="col-md-4 mb-3">
-            <label class="form-label">Lampiran</label>
-            <input id="incoming-file" name="lampiran" type="file" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
-            <div class="form-text" id="incoming-file-info">Pilih file jika ada (maks 10MB).</div>
-          </div>
-          <div class="col-12 mb-3">
-            <label class="form-label">Keterangan Tambahan</label>
-            <textarea name="keterangan" rows="2" class="form-control"></textarea>
-          </div>
-        </div>
-      </form>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary modal-close">Batal</button>
-        <button type="submit" class="btn btn-primary" form="incoming-form">Simpan Surat Masuk</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="outgoing-modal" class="modal-wrapper">
-    <div class="modal-card">
-      <div class="modal-header d-flex align-items-center justify-content-between">
-        <div>
-          <h5 class="mb-1">Form Surat Keluar</h5>
-          <p class="text-muted small mb-0">Isi informasi untuk Surat Keluar dengan lampiran dan status.</p>
-        </div>
-        <button type="button" class="btn-close modal-close" aria-label="Tutup"></button>
-      </div>
-      <form id="outgoing-form" class="modal-body" novalidate>
-        <div class="row g-3">
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Nomor Surat</label>
-            <input name="noSurat" type="text" class="form-control" required>
-            <div class="invalid-feedback"></div>
-          </div>
-          <div class="col-md-6 mb-3">
-            <label class="form-label">Tanggal Surat</label>
-            <input name="tanggalSurat" type="date" class="form-control" required>
-            <div class="invalid-feedback"></div>
-          </div>
-          <div class="col-12 mb-3">
-            <label class="form-label">Tujuan Surat</label>
-            <input name="tujuanSurat" type="text" class="form-control" required>
-            <div class="invalid-feedback"></div>
-          </div>
-          <div class="col-12 mb-3">
-            <label class="form-label">Perihal</label>
-            <textarea name="perihal" rows="3" class="form-control" required></textarea>
-            <div class="invalid-feedback"></div>
-          </div>
-          <div class="col-md-4 mb-3">
-            <label class="form-label">Sifat Surat</label>
-            <select name="sifatSurat" class="form-select" required>
-              <option value="">Pilih sifat</option>
-              <option>Biasa</option>
-              <option>Penting</option>
-              <option>Rahasia</option>
-            </select>
-            <div class="invalid-feedback"></div>
-          </div>
-          <div class="col-md-4 mb-3">
-            <label class="form-label">Status Surat</label>
-            <select name="status" class="form-select" required>
-              <option value="">Pilih status</option>
-              <option>Draft</option>
-              <option>Terkirim</option>
-            </select>
-            <div class="invalid-feedback"></div>
-          </div>
-          <div class="col-md-4 mb-3">
-            <label class="form-label">Lampiran</label>
-            <input id="outgoing-file" name="lampiran" type="file" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
-            <div class="form-text" id="outgoing-file-info">Pilih file jika ada (maks 10MB).</div>
-          </div>
-          <div class="col-12 mb-3">
-            <label class="form-label">Keterangan Tambahan</label>
-            <textarea name="keterangan" rows="2" class="form-control"></textarea>
-          </div>
-        </div>
-      </form>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary modal-close">Batal</button>
-        <button type="submit" class="btn btn-success" form="outgoing-form">Simpan Surat Keluar</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="preview-modal" class="modal-wrapper">
-    <div class="modal-card">
-      <div class="modal-header d-flex align-items-center justify-content-between">
-        <div>
-          <h5 id="preview-title" class="mb-0">Preview Lampiran</h5>
-        </div>
-        <button type="button" class="btn-close modal-close" aria-label="Tutup"></button>
-      </div>
-      <div class="modal-body">
-        <iframe id="preview-frame" class="preview-frame" title="Preview lampiran"></iframe>
-        <div class="mt-3">
-          <a id="preview-link" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener noreferrer">Buka di tab baru</a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div id="confirm-modal" class="modal-wrapper">
-    <div class="modal-card">
-      <div class="modal-header d-flex align-items-center justify-content-between">
-        <div>
-          <h5 class="mb-1">Konfirmasi</h5>
-          <p class="small text-muted mb-0">Aksi ini akan menghapus data secara permanen.</p>
-        </div>
-        <button type="button" class="btn-close modal-close" aria-label="Tutup"></button>
-      </div>
-      <div class="modal-body">
-        <p id="confirm-message" class="mb-0"></p>
-      </div>
-      <div class="modal-footer">
-        <button id="confirm-no" type="button" class="btn btn-outline-secondary">Batal</button>
-        <button id="confirm-yes" type="button" class="btn btn-danger">Hapus</button>
-      </div>
-    </div>
-  </div>
-
-  <div id="toast" class="toast toast-success" role="status" aria-live="polite"></div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" integrity="sha512-mHK30jtvR2oUzm2CSsakWZNw0wOS4jyyJLc9Y8x1L4x+8iu5iZ1Xbkbj2q8N0TYU2PkZB7hABIdVbQ8Z2hereQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-  <script type="module" src="js/app.js"></script>
-</body>
-</html>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Aplikasi Surat Keluar dan Masuk modular dengan persiapan Google Apps Script.">
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <title>Surat Keluar & Masuk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-p5Qf9v+0Mc0oO5uMX6i9FZ4ZTEYu5VxO5Okp2PESJzCf8Ka9f7LHbkZbsV6IF7xs" crossorigin="anonymous">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <a href="#main-content" class="skip-link">Langsung ke konten utama</a>
+  <div id="offline-bar" class="offline-bar" role="status" aria-live="polite">📡 Offline. Data mungkin disajikan dari cache.</div>
+
+  <main class="container-fluid p-0">
+    <section id="login-screen" class="vh-100 d-flex align-items-center justify-content-center bg-light">
+      <div class="card rounded-4 shadow-sm login-card" style="max-width: 420px; width: 100%;" aria-label="Login aplikasi">
+        <div class="card-body p-4">
+          <h1 class="h4 mb-2">Masuk ke Surat Keluar & Masuk</h1>
+          <p class="text-muted mb-4">Gunakan akun terdaftar untuk mengelola Surat Masuk dan Surat Keluar.</p>
+          <form id="login-form" novalidate>
+            <div class="mb-3">
+              <label for="login-user" class="form-label">Username</label>
+              <input id="login-user" class="form-control" type="text" autocomplete="username" required>
+            </div>
+            <div class="mb-3">
+              <label for="login-pass" class="form-label">Password</label>
+              <input id="login-pass" class="form-control" type="password" autocomplete="current-password" required>
+            </div>
+            <div id="login-error" class="text-danger small mb-3" role="alert" aria-live="assertive"></div>
+            <button type="submit" class="btn btn-primary w-100">🔒 Masuk</button>
+          </form>
+          <p class="text-muted text-center mt-4 mb-0">Aplikasi siap diintegrasikan dengan Google Apps Script dan Google Sheets.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="app-screen" class="app-shell p-0 d-none">
+      <header class="header-app text-white">
+        <div class="container py-3">
+          <div class="row align-items-center gy-3">
+            <div class="col-md">
+              <div class="d-flex flex-column gap-2">
+                <div class="d-flex align-items-center justify-content-between gap-3 flex-wrap">
+                  <div>
+                    <h1 id="app-title" class="h4 mb-1">Surat Keluar & Masuk</h1>
+                    <p class="mb-0 text-white-75">Dashboard manajemen surat dengan fitur modular dan tab terpisah.</p>
+                  </div>
+                  <div class="d-flex gap-2 flex-wrap">
+                    <button id="theme-toggle" type="button" class="btn btn-outline-light btn-sm" aria-label="Toggle theme">🌙</button>
+                    <button id="btn-refresh" type="button" class="btn btn-outline-light btn-sm">🔄 Refresh</button>
+                    <button id="btn-logout" type="button" class="btn btn-light btn-sm text-primary">Keluar</button>
+                    <span id="app-version" class="badge bg-white text-primary align-self-center">v1.0</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="container py-4" id="main-content">
+        <div class="d-flex flex-column flex-md-row align-items-start justify-content-between gap-3 mb-4">
+          <div>
+            <p class="text-muted mb-1">Selamat datang</p>
+            <h2 class="h5 mb-0">Kelola Surat Masuk dan Surat Keluar</h2>
+          </div>
+          <nav>
+            <div class="nav nav-pills" role="tablist" aria-label="Pilih modul surat">
+              <button id="nav-incoming" class="nav-link active" type="button" role="tab">Surat Masuk</button>
+              <button id="nav-outgoing" class="nav-link" type="button" role="tab">Surat Keluar</button>
+            </div>
+          </nav>
+        </div>
+
+        <div class="row row-cols-1 row-cols-xl-3 g-3 mb-4">
+          <div class="col">
+            <div class="card card-soft p-3 h-100">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="text-uppercase small text-muted">Total Surat Masuk</span>
+                <span class="badge bg-primary">Masuk</span>
+              </div>
+              <h3 id="incoming-count" class="mb-0">0 surat masuk</h3>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card card-soft p-3 h-100">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="text-uppercase small text-muted">Total Surat Keluar</span>
+                <span class="badge bg-success">Keluar</span>
+              </div>
+              <h3 id="outgoing-count" class="mb-0">0 surat keluar</h3>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card card-soft p-3 h-100">
+              <div class="d-flex align-items-center justify-content-between mb-2">
+                <span class="text-uppercase small text-muted">Status Backend</span>
+                <span id="backend-status" class="badge bg-info text-dark">Siap</span>
+              </div>
+              <p class="mb-0 text-muted small">Google Apps Script ditujukan sebagai backend REST-like.</p>
+            </div>
+          </div>
+        </div>
+
+        <section id="section-incoming" class="tab-pane active">
+          <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3 mb-3">
+            <div>
+              <h3 class="h6 mb-1">Daftar Surat Masuk</h3>
+              <p class="text-muted small mb-0">Filter dan kelola Surat Masuk secara cepat.</p>
+            </div>
+            <button id="incoming-add-button" type="button" class="btn btn-primary">+ Tambah Surat Masuk</button>
+          </div>
+
+          <div class="card card-soft mb-4">
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label class="form-label">Cari</label>
+                  <input id="incoming-search" type="search" class="form-control" placeholder="Cari nomor, pengirim, atau perihal">
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">Status</label>
+                  <select id="incoming-status" class="form-select">
+                    <option value="">Semua Status</option>
+                    <option>Belum</option>
+                    <option>Proses</option>
+                    <option>Selesai</option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">Dari</label>
+                  <input id="incoming-from" type="date" class="form-control">
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">Sampai</label>
+                  <input id="incoming-to" type="date" class="form-control">
+                </div>
+                <div class="col-md-2 d-flex align-items-end gap-2">
+                  <button id="incoming-export-csv" type="button" class="btn btn-outline-primary w-100">CSV</button>
+                  <button id="incoming-export-excel" type="button" class="btn btn-outline-success w-100">Excel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-soft mb-4">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>Nomor Surat</th>
+                    <th>Tanggal Masuk</th>
+                    <th>Pengirim</th>
+                    <th>Perihal</th>
+                    <th>Sifat Surat</th>
+                    <th>Status</th>
+                    <th>Lampiran</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="incoming-table-body"></tbody>
+              </table>
+            </div>
+            <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+              <div id="incoming-pager" class="text-muted small">Menampilkan 0 dari 0</div>
+              <div class="d-flex align-items-center gap-2">
+                <label class="mb-0 small">Baris/hal</label>
+                <select id="incoming-per-page" class="form-select form-select-sm" style="width: auto;">
+                  <option value="10">10</option>
+                  <option value="25" selected>25</option>
+                  <option value="50">50</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section id="section-outgoing" class="tab-pane d-none">
+          <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-3 mb-3">
+            <div>
+              <h3 class="h6 mb-1">Daftar Surat Keluar</h3>
+              <p class="text-muted small mb-0">Kelola Surat Keluar dengan status Draft dan Terkirim.</p>
+            </div>
+            <button id="outgoing-add-button" type="button" class="btn btn-success">+ Tambah Surat Keluar</button>
+          </div>
+
+          <div class="card card-soft mb-4">
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-md-4">
+                  <label class="form-label">Cari</label>
+                  <input id="outgoing-search" type="search" class="form-control" placeholder="Cari nomor, tujuan, atau perihal">
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">Status</label>
+                  <select id="outgoing-status" class="form-select">
+                    <option value="">Semua Status</option>
+                    <option>Draft</option>
+                    <option>Terkirim</option>
+                  </select>
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">Dari</label>
+                  <input id="outgoing-from" type="date" class="form-control">
+                </div>
+                <div class="col-md-2">
+                  <label class="form-label">Sampai</label>
+                  <input id="outgoing-to" type="date" class="form-control">
+                </div>
+                <div class="col-md-2 d-flex align-items-end gap-2">
+                  <button id="outgoing-export-csv" type="button" class="btn btn-outline-primary w-100">CSV</button>
+                  <button id="outgoing-export-excel" type="button" class="btn btn-outline-success w-100">Excel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card card-soft mb-4">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>Nomor Surat</th>
+                    <th>Tanggal Surat</th>
+                    <th>Tujuan Surat</th>
+                    <th>Perihal</th>
+                    <th>Sifat Surat</th>
+                    <th>Status</th>
+                    <th>Lampiran</th>
+                    <th>Aksi</th>
+                  </tr>
+                </thead>
+                <tbody id="outgoing-table-body"></tbody>
+              </table>
+            </div>
+            <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+              <div id="outgoing-pager" class="text-muted small">Menampilkan 0 dari 0</div>
+              <div class="d-flex align-items-center gap-2">
+                <label class="mb-0 small">Baris/hal</label>
+                <select id="outgoing-per-page" class="form-select form-select-sm" style="width: auto;">
+                  <option value="10">10</option>
+                  <option value="25" selected>25</option>
+                  <option value="50">50</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </section>
+  </main>
+
+  <div id="incoming-modal" class="modal-wrapper">
+    <div class="modal-card">
+      <div class="modal-header d-flex align-items-center justify-content-between">
+        <div>
+          <h5 class="mb-1">Form Surat Masuk</h5>
+          <p class="text-muted small mb-0">Lengkapi data berikut untuk menambahkan atau mengubah Surat Masuk.</p>
+        </div>
+        <button type="button" class="btn-close modal-close" aria-label="Tutup"></button>
+      </div>
+      <form id="incoming-form" class="modal-body" novalidate>
+        <div class="row g-3">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nomor Surat</label>
+            <input name="noSurat" type="text" class="form-control" required>
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Tanggal Masuk</label>
+            <input name="tanggalMasuk" type="date" class="form-control" required>
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="col-12 mb-3">
+            <label class="form-label">Pengirim</label>
+            <input name="pengirim" type="text" class="form-control" required>
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="col-12 mb-3">
+            <label class="form-label">Perihal</label>
+            <textarea name="perihal" rows="3" class="form-control" required></textarea>
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Sifat Surat</label>
+            <select name="sifatSurat" class="form-select" required>
+              <option value="">Pilih sifat</option>
+              <option>Biasa</option>
+              <option>Penting</option>
+              <option>Rahasia</option>
+            </select>
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Status</label>
+            <select name="status" class="form-select" required>
+              <option value="">Pilih status</option>
+              <option>Belum</option>
+              <option>Proses</option>
+              <option>Selesai</option>
+            </select>
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Lampiran</label>
+            <input id="incoming-file" name="lampiran" type="file" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+            <div class="form-text" id="incoming-file-info">Pilih file jika ada (maks 10MB).</div>
+          </div>
+          <div class="col-12 mb-3">
+            <label class="form-label">Keterangan Tambahan</label>
+            <textarea name="keterangan" rows="2" class="form-control"></textarea>
+          </div>
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary modal-close">Batal</button>
+        <button type="submit" class="btn btn-primary" form="incoming-form">Simpan Surat Masuk</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="outgoing-modal" class="modal-wrapper">
+    <div class="modal-card">
+      <div class="modal-header d-flex align-items-center justify-content-between">
+        <div>
+          <h5 class="mb-1">Form Surat Keluar</h5>
+          <p class="text-muted small mb-0">Isi informasi untuk Surat Keluar dengan lampiran dan status.</p>
+        </div>
+        <button type="button" class="btn-close modal-close" aria-label="Tutup"></button>
+      </div>
+      <form id="outgoing-form" class="modal-body" novalidate>
+        <div class="row g-3">
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Nomor Surat</label>
+            <input name="noSurat" type="text" class="form-control" required>
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Tanggal Surat</label>
+            <input name="tanggalSurat" type="date" class="form-control" required>
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="col-12 mb-3">
+            <label class="form-label">Tujuan Surat</label>
+            <input name="tujuanSurat" type="text" class="form-control" required>
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="col-12 mb-3">
+            <label class="form-label">Perihal</label>
+            <textarea name="perihal" rows="3" class="form-control" required></textarea>
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Sifat Surat</label>
+            <select name="sifatSurat" class="form-select" required>
+              <option value="">Pilih sifat</option>
+              <option>Biasa</option>
+              <option>Penting</option>
+              <option>Rahasia</option>
+            </select>
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Status Surat</label>
+            <select name="status" class="form-select" required>
+              <option value="">Pilih status</option>
+              <option>Draft</option>
+              <option>Terkirim</option>
+            </select>
+            <div class="invalid-feedback"></div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Lampiran</label>
+            <input id="outgoing-file" name="lampiran" type="file" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+            <div class="form-text" id="outgoing-file-info">Pilih file jika ada (maks 10MB).</div>
+          </div>
+          <div class="col-12 mb-3">
+            <label class="form-label">Keterangan Tambahan</label>
+            <textarea name="keterangan" rows="2" class="form-control"></textarea>
+          </div>
+        </div>
+      </form>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary modal-close">Batal</button>
+        <button type="submit" class="btn btn-success" form="outgoing-form">Simpan Surat Keluar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="preview-modal" class="modal-wrapper">
+    <div class="modal-card">
+      <div class="modal-header d-flex align-items-center justify-content-between">
+        <div>
+          <h5 id="preview-title" class="mb-0">Preview Lampiran</h5>
+        </div>
+        <button type="button" class="btn-close modal-close" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body">
+        <iframe id="preview-frame" class="preview-frame" title="Preview lampiran"></iframe>
+        <div class="mt-3">
+          <a id="preview-link" class="btn btn-sm btn-outline-primary" target="_blank" rel="noopener noreferrer">Buka di tab baru</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="confirm-modal" class="modal-wrapper">
+    <div class="modal-card">
+      <div class="modal-header d-flex align-items-center justify-content-between">
+        <div>
+          <h5 class="mb-1">Konfirmasi</h5>
+          <p class="small text-muted mb-0">Aksi ini akan menghapus data secara permanen.</p>
+        </div>
+        <button type="button" class="btn-close modal-close" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body">
+        <p id="confirm-message" class="mb-0"></p>
+      </div>
+      <div class="modal-footer">
+        <button id="confirm-no" type="button" class="btn btn-outline-secondary">Batal</button>
+        <button id="confirm-yes" type="button" class="btn btn-danger">Hapus</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast toast-success" role="status" aria-live="polite"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js" integrity="sha512-mHK30jtvR2oUzm2CSsakWZNw0wOS4jyyJLc9Y8x1L4x+8iu5iZ1Xbkbj2q8N0TYU2PkZB7hABIdVbQ8Z2hereQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>

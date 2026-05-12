@@ -88,6 +88,15 @@ function updateSummary() {
   elements.outgoingCount.textContent = `${dataManager.state.outgoing.length} surat keluar`;
 }
 
+function getStatusClass(status) {
+  const normalized = String(status || '').trim().toLowerCase();
+  if (normalized.includes('draft')) return 'status-draft';
+  if (normalized.includes('terkirim') || normalized.includes('sent')) return 'status-sent';
+  if (normalized.includes('proses') || normalized.includes('process')) return 'status-proses';
+  if (normalized.includes('selesai') || normalized.includes('done')) return 'status-selesai';
+  return 'status-proses';
+}
+
 function buildTableRow(record, type) {
   const row = document.createElement('tr');
   const actions = document.createElement('div');
@@ -113,14 +122,17 @@ function buildTableRow(record, type) {
 
   actions.append(edit, remove, preview);
 
+  const statusLabel = `<span class="status-pill ${getStatusClass(record.status)}">${record.status || '-'}</span>`;
+  const sifatBadge = `<span class="badge-sifat">${record.sifatSurat || '-'}</span>`;
+
   if (type === 'incoming') {
     row.innerHTML = `
       <td>${record.noSurat}</td>
       <td>${formatDate(record.tanggalMasuk)}</td>
       <td>${record.pengirim}</td>
       <td>${record.perihal}</td>
-      <td>${record.sifatSurat}</td>
-      <td>${record.status}</td>
+      <td>${sifatBadge}</td>
+      <td>${statusLabel}</td>
       <td>${record.lampiran?.name || '-'}</td>
       <td></td>`;
   } else {
@@ -129,8 +141,8 @@ function buildTableRow(record, type) {
       <td>${formatDate(record.tanggalSurat)}</td>
       <td>${record.tujuanSurat}</td>
       <td>${record.perihal}</td>
-      <td>${record.sifatSurat}</td>
-      <td>${record.status}</td>
+      <td>${sifatBadge}</td>
+      <td>${statusLabel}</td>
       <td>${record.lampiran?.name || '-'}</td>
       <td></td>`;
   }
