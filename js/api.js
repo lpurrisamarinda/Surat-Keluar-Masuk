@@ -19,6 +19,14 @@ async function fetchWithTimeout(url, options = {}) {
       throw new Error(`HTTP ${response.status} ${response.statusText}`);
     }
     return await response.json();
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      throw new Error('Permintaan ke server gagal karena timeout. Silakan coba lagi.');
+    }
+    if (error instanceof TypeError) {
+      throw new Error('Tidak dapat terhubung ke server. Periksa koneksi atau URL backend.');
+    }
+    throw error;
   } finally {
     window.clearTimeout(id);
   }

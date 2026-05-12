@@ -53,6 +53,22 @@ export async function login(username, password) {
       showToast(`Selamat datang, ${session.username}!`, 'success');
       return session;
     } catch (err) {
+      const isNetworkError = /failed to fetch|tidak dapat terhubung|timeout|time out/i.test(err.message);
+      if (isNetworkError) {
+        const fallbackUser = fallbackUsers.find(
+          (item) => item.username === sanitizedUser && item.password === sanitizedPass
+        );
+        if (fallbackUser) {
+          const session = {
+            username: fallbackUser.username,
+            role: fallbackUser.role,
+            token: `${fallbackUser.username}-${Date.now()}`
+          };
+          setSession(session);
+          showToast(`Login offline berhasil sebagai ${session.username}.`, 'warn');
+          return session;
+        }
+      }
       throw new Error(err.message || 'Gagal melakukan login.');
     }
   }
