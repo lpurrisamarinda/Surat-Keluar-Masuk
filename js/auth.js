@@ -1,4 +1,5 @@
 import { showToast, sanitize } from './utilities.js';
+import * as api from './api.js';
 
 const AUTH_KEY = 'skm-session';
 const fallbackUsers = [
@@ -33,6 +34,27 @@ export async function login(username, password) {
 
   if (!sanitizedUser || !sanitizedPass) {
     throw new Error('Username dan password wajib diisi.');
+  }
+
+  if (window.__GAS_URL__) {
+    try {
+      const result = await api.login(sanitizedUser, sanitizedPass);
+      if (!result || result.status !== 'success') {
+        throw new Error(result?.message || 'Kombinasi username/password tidak valid.');
+      }
+
+      const session = {
+        username: String(result.username || sanitizedUser),
+        role: String(result.role || 'user'),
+        token: `${String(result.username || sanitizedUser)}-${Date.now()}`
+      };
+
+      setSession(session);
+      showToast(`Selamat datang, ${session.username}!`, 'success');
+      return session;
+    } catch (err) {
+      throw new Error(err.message || 'Gagal melakukan login.');
+    }
   }
 
   const user = fallbackUsers.find(

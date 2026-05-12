@@ -24,6 +24,14 @@ async function fetchWithTimeout(url, options = {}) {
   }
 }
 
+export async function login(username, password) {
+  if (!GAS_URL) {
+    throw new Error('URL Apps Script tidak dikonfigurasi.');
+  }
+  const payload = { action: 'login', username, password };
+  return fetchWithTimeout(GAS_URL, buildFetchOptions(payload));
+}
+
 export async function fetchSheetData(sheetName) {
   if (!GAS_URL) {
     throw new Error('URL Apps Script tidak dikonfigurasi.');
