@@ -19,6 +19,7 @@ const elements = {
   btnLogout: document.getElementById('btn-logout'),
   btnRefresh: document.getElementById('btn-refresh'),
   themeToggle: document.getElementById('theme-toggle'),
+  pwToggle: document.getElementById('pw-toggle'),
   headerTitle: document.getElementById('app-title'),
   appVersion: document.getElementById('app-version'),
   incomingTableBody: document.getElementById('incoming-table-body'),
@@ -293,6 +294,12 @@ function attachFormListeners() {
   elements.themeToggle.addEventListener('click', () => {
     const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
     setTheme(next);
+  });
+
+  elements.pwToggle?.addEventListener('click', () => {
+    const current = elements.loginPass.type === 'password' ? 'text' : 'password';
+    elements.loginPass.type = current;
+    elements.pwToggle.textContent = current === 'password' ? 'Lihat' : 'Sembunyikan';
   });
 
   elements.navIncoming.addEventListener('click', () => showSection('incoming'));
