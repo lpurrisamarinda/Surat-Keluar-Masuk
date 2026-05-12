@@ -519,7 +519,7 @@ td{padding:9px 12px;vertical-align:middle}
               <div class="fg"><label for="f-perihal">Perihal *</label><textarea id="f-perihal" placeholder="Tuliskan perihal surat..." maxlength="500"></textarea><span class="field-err" id="f-perihal-err" role="alert">Perihal wajib diisi</span></div>
             </div>
             <div class="frow c1">
-              <div class="fg"><label for="f-sifat">Sifat Surat</label><select id="f-sifat"><option value="-">Pilih sifat surat...</option><option value="Biasa">Biasa</option><option value="Penting">Penting</option><option value="Rahasia">Rahasia</option><option value="Sangat Rahasia">Sangat Rahasia</option></select></div>
+              <div class="fg"><label for="f-sifat">Sifat Surat</label><input type="text" id="f-sifat" placeholder="Biasa, Penting, Rahasia, dll" maxlength="100"></div>
             </div>
             <div class="fsec">Disposisi, Status &amp; Deadline</div>
             <div class="frow c1"><div class="fg"><label for="f-disposisi">Disposisi Ke</label><input type="text" id="f-disposisi" placeholder="Nama / bagian tujuan" maxlength="200"></div></div>
@@ -665,7 +665,7 @@ td{padding:9px 12px;vertical-align:middle}
               <div class="fg"><label for="fk-perihal">Perihal *</label><textarea id="fk-perihal" placeholder="Tuliskan perihal surat..." maxlength="500"></textarea><span class="field-err" id="fk-perihal-err" role="alert">Perihal wajib diisi</span></div>
             </div>
             <div class="frow c1">
-              <div class="fg"><label for="fk-sifat">Sifat Surat</label><select id="fk-sifat"><option value="-">Pilih sifat surat...</option><option value="Biasa">Biasa</option><option value="Penting">Penting</option><option value="Rahasia">Rahasia</option><option value="Sangat Rahasia">Sangat Rahasia</option></select></div>
+              <div class="fg"><label for="fk-sifat">Sifat Surat</label><input type="text" id="fk-sifat" placeholder="Biasa, Penting, Rahasia, dll" maxlength="100"></div>
             </div>
             <div class="fsec">Disposisi, Status &amp; Deadline</div>
             <div class="frow c1"><div class="fg"><label for="fk-disposisi">Disposisi</label><input type="text" id="fk-disposisi" placeholder="Nama / bagian terkait" maxlength="200"></div></div>
@@ -791,15 +791,7 @@ td{padding:9px 12px;vertical-align:middle}
       <div class="frow c1"><div class="fg"><label>Pengirim</label><input type="text" id="e-pengirim" maxlength="200"></div></div>
       <div class="frow c1"><div class="fg"><label>Perihal</label><textarea id="e-perihal" maxlength="500"></textarea></div></div>
       <div class="frow c1">
-        <div class="fg"><label>Sifat Surat</label>
-          <select id="e-sifat">
-            <option value="-">Pilih sifat surat...</option>
-            <option value="Biasa">Biasa</option>
-            <option value="Penting">Penting</option>
-            <option value="Rahasia">Rahasia</option>
-            <option value="Sangat Rahasia">Sangat Rahasia</option>
-          </select>
-        </div>
+        <div class="fg"><label>Sifat Surat</label><input type="text" id="e-sifat" placeholder="Biasa, Penting, Rahasia, dll" maxlength="100"></div>
       </div>
       <div class="fsec">Disposisi, Status &amp; Deadline</div>
       <div class="frow c1"><div class="fg"><label>Disposisi Ke</label><input type="text" id="e-disposisi" maxlength="200"></div></div>
@@ -838,15 +830,7 @@ td{padding:9px 12px;vertical-align:middle}
       <div class="frow c1"><div class="fg"><label>Tujuan</label><input type="text" id="ek-tujuan" maxlength="200"></div></div>
       <div class="frow c1"><div class="fg"><label>Perihal</label><textarea id="ek-perihal" maxlength="500"></textarea></div></div>
       <div class="frow c1">
-        <div class="fg"><label>Sifat Surat</label>
-          <select id="ek-sifat">
-            <option value="-">Pilih sifat surat...</option>
-            <option value="Biasa">Biasa</option>
-            <option value="Penting">Penting</option>
-            <option value="Rahasia">Rahasia</option>
-            <option value="Sangat Rahasia">Sangat Rahasia</option>
-          </select>
-        </div>
+        <div class="fg"><label>Sifat Surat</label><input type="text" id="ek-sifat" placeholder="Biasa, Penting, Rahasia, dll" maxlength="100"></div>
       </div>
       <div class="fsec">Disposisi, Status &amp; Deadline</div>
       <div class="frow c1"><div class="fg"><label>Disposisi</label><input type="text" id="ek-disposisi" maxlength="200"></div></div>
@@ -1379,7 +1363,7 @@ async function tambahIn() {
       const newItem = { id:Date.now(), no:Security.sanitize(no), tgl, pengirim:Security.sanitize(pengirim), perihal:Security.sanitize(perihal), sifat:Security.sanitize(sifat), disposisi:Security.sanitize(disposisi), status, deadline, fileUrl, fileName:Security.sanitize(fileName) };
       dataIn.unshift(newItem); Cache.saveDataIn(dataIn);
       AuditLog.add('ADD_MASUK',`No: ${no}, Pengirim: ${pengirim}`);
-      ['f-no','f-pengirim','f-perihal','f-disposisi','f-sifat'].forEach(id => $(id).value=''); $('f-sifat').value='-';
+      ['f-no','f-pengirim','f-perihal','f-disposisi','f-sifat'].forEach(id => $(id).value='');
       $('f-tgl').valueAsDate=new Date(); $('f-deadline').value=''; $('f-status').value='Belum'; styleStatus($('f-status')); clearFileIn();
       updateTabCounts(); populatePengirim(); pageIn=1; applyFilterIn();
     } else toast('⚠️ '+Security.sanitize(j.message),'warn');
@@ -1427,7 +1411,7 @@ async function tambahOut() {
       const newItem = { id:Date.now()+1000000, no:Security.sanitize(no), tgl, tujuan:Security.sanitize(tujuan), perihal:Security.sanitize(perihal), sifat:Security.sanitize(sifat), disposisi:Security.sanitize(disposisi), status, deadline, fileUrl, fileName:Security.sanitize(fileName) };
       dataOut.unshift(newItem); Cache.saveDataOut(dataOut);
       AuditLog.add('ADD_KELUAR',`No: ${no}, Tujuan: ${tujuan}`);
-      ['fk-no','fk-tujuan','fk-perihal','fk-disposisi','fk-sifat'].forEach(id => $(id).value=''); $('fk-sifat').value='-';
+      ['fk-no','fk-tujuan','fk-perihal','fk-disposisi','fk-sifat'].forEach(id => $(id).value='');
       $('fk-tgl').valueAsDate=new Date(); $('fk-deadline').value=''; $('fk-status').value='Draft'; styleStatusOut($('fk-status')); clearFileOut();
       updateTabCounts(); populateTujuan(); pageOut=1; applyFilterOut();
     } else toast('⚠️ '+Security.sanitize(j.message),'warn');
