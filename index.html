@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -44,18 +44,22 @@
   --text:var(--dm-text);--muted:var(--dm-muted);--border:var(--dm-border);
   --warn-bg:#3b0f12;--warn-bd:#7f1d1d;--caut-bg:#2d1f00;--caut-bd:#78350f;
 }
+[data-theme="dark"] *{color:var(--text)}
 [data-theme="dark"] .header{background:linear-gradient(135deg,#0d1117,#161b22)}
-[data-theme="dark"] thead th{background:#161b22;color:#8b949e}
+[data-theme="dark"] thead th{background:#161b22;color:#8b949e;font-family:'Plus Jakarta Sans',sans-serif}
+[data-theme="dark"] tbody tr{background:#161b22}
 [data-theme="dark"] tbody tr:hover{background:#1c2128}
 [data-theme="dark"] .login-card{background:#161b22;color:var(--dm-text)}
 [data-theme="dark"] .fg input,[data-theme="dark"] .fg select,[data-theme="dark"] .fg textarea,
-[data-theme="dark"] .fi input,[data-theme="dark"] .fi select{background:#0d1117;color:var(--dm-text);border-color:var(--dm-border)}
-[data-theme="dark"] .modal,[data-theme="dark"] .prev-modal{background:#161b22}
+[data-theme="dark"] .fi input,[data-theme="dark"] .fi select{background:#0d1117;color:var(--dm-text);border-color:var(--dm-border);font-family:'Plus Jakarta Sans',sans-serif}
+[data-theme="dark"] .modal,[data-theme="dark"] .prev-modal{background:#161b22;color:var(--text)}
 [data-theme="dark"] .modal-head,[data-theme="dark"] .modal-foot,[data-theme="dark"] .card-head,
-[data-theme="dark"] .filter-panel,[data-theme="dark"] .pagination{background:#1c2128;border-color:var(--dm-border)}
+[data-theme="dark"] .filter-panel,[data-theme="dark"] .pagination{background:#1c2128;border-color:var(--dm-border);color:var(--text)}
 [data-theme="dark"] .tab-nav{background:#161b22;border-color:var(--dm-border)}
 [data-theme="dark"] .tab-btn:not(.active){color:var(--dm-muted)}
 [data-theme="dark"] .tab-btn:not(.active):hover{background:#1c2128;color:var(--dm-text)}
+[data-theme="dark"] table{color:var(--text)}
+[data-theme="dark"] .card{background:var(--card);color:var(--text)}
 
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-tap-highlight-color:transparent;transition:background var(--t-mid),color var(--t-mid)}
@@ -158,8 +162,8 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(-
 .frow{display:grid;gap:9px;margin-bottom:9px}
 .frow.c2{grid-template-columns:1fr 1fr}.frow.c1{grid-template-columns:1fr}
 .fg{display:flex;flex-direction:column;gap:3px}
-.fg label{font-size:9.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
-.fg input,.fg select,.fg textarea{font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;color:var(--text);border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;outline:none;transition:border-color .15s,box-shadow .15s;background:var(--card);width:100%;-webkit-appearance:none;appearance:none;text-overflow:ellipsis;}
+.fg label,.fi label{font-size:9.5px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--muted);font-family:'Plus Jakarta Sans',sans-serif}
+.fg input,.fg select,.fg textarea,.fi input,.fi select{font-family:'Plus Jakarta Sans',sans-serif;font-size:12.5px;color:var(--text);border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;outline:none;transition:border-color .15s,box-shadow .15s;background:var(--card);width:100%;-webkit-appearance:none;appearance:none;text-overflow:ellipsis;}
 .fg select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 9px center;padding-right:28px}
 .fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--navy);box-shadow:0 0 0 3px rgba(15,30,60,.07)}
 .fg textarea{resize:vertical;min-height:58px;line-height:1.5}
@@ -514,6 +518,9 @@ td{padding:9px 12px;vertical-align:middle}
             <div class="frow c1">
               <div class="fg"><label for="f-perihal">Perihal *</label><textarea id="f-perihal" placeholder="Tuliskan perihal surat..." maxlength="500"></textarea><span class="field-err" id="f-perihal-err" role="alert">Perihal wajib diisi</span></div>
             </div>
+            <div class="frow c1">
+              <div class="fg"><label for="f-sifat">Sifat Surat</label><select id="f-sifat"><option value="-">Pilih sifat surat...</option><option value="Biasa">Biasa</option><option value="Penting">Penting</option><option value="Rahasia">Rahasia</option><option value="Sangat Rahasia">Sangat Rahasia</option></select></div>
+            </div>
             <div class="fsec">Disposisi, Status &amp; Deadline</div>
             <div class="frow c1"><div class="fg"><label for="f-disposisi">Disposisi Ke</label><input type="text" id="f-disposisi" placeholder="Nama / bagian tujuan" maxlength="200"></div></div>
             <div class="frow c2">
@@ -588,6 +595,7 @@ td{padding:9px 12px;vertical-align:middle}
                 <th class="sa" onclick="sortByIn('tgl')">Tanggal</th>
                 <th class="sa" onclick="sortByIn('pengirim')">Pengirim</th>
                 <th>Perihal</th>
+                <th>Sifat Surat</th>
                 <th>Disposisi</th>
                 <th class="sa" onclick="sortByIn('status')">Status</th>
                 <th class="sa" onclick="sortByIn('deadline')">Deadline</th>
@@ -655,6 +663,9 @@ td{padding:9px 12px;vertical-align:middle}
             </div>
             <div class="frow c1">
               <div class="fg"><label for="fk-perihal">Perihal *</label><textarea id="fk-perihal" placeholder="Tuliskan perihal surat..." maxlength="500"></textarea><span class="field-err" id="fk-perihal-err" role="alert">Perihal wajib diisi</span></div>
+            </div>
+            <div class="frow c1">
+              <div class="fg"><label for="fk-sifat">Sifat Surat</label><select id="fk-sifat"><option value="-">Pilih sifat surat...</option><option value="Biasa">Biasa</option><option value="Penting">Penting</option><option value="Rahasia">Rahasia</option><option value="Sangat Rahasia">Sangat Rahasia</option></select></div>
             </div>
             <div class="fsec">Disposisi, Status &amp; Deadline</div>
             <div class="frow c1"><div class="fg"><label for="fk-disposisi">Disposisi</label><input type="text" id="fk-disposisi" placeholder="Nama / bagian terkait" maxlength="200"></div></div>
@@ -730,6 +741,7 @@ td{padding:9px 12px;vertical-align:middle}
                 <th class="sa" onclick="sortByOut('tgl')">Tanggal</th>
                 <th class="sa" onclick="sortByOut('tujuan')">Tujuan</th>
                 <th>Perihal</th>
+                <th>Sifat Surat</th>
                 <th>Disposisi</th>
                 <th class="sa" onclick="sortByOut('status')">Status</th>
                 <th class="sa" onclick="sortByOut('deadline')">Deadline</th>
@@ -778,6 +790,17 @@ td{padding:9px 12px;vertical-align:middle}
       </div>
       <div class="frow c1"><div class="fg"><label>Pengirim</label><input type="text" id="e-pengirim" maxlength="200"></div></div>
       <div class="frow c1"><div class="fg"><label>Perihal</label><textarea id="e-perihal" maxlength="500"></textarea></div></div>
+      <div class="frow c1">
+        <div class="fg"><label>Sifat Surat</label>
+          <select id="e-sifat">
+            <option value="-">Pilih sifat surat...</option>
+            <option value="Biasa">Biasa</option>
+            <option value="Penting">Penting</option>
+            <option value="Rahasia">Rahasia</option>
+            <option value="Sangat Rahasia">Sangat Rahasia</option>
+          </select>
+        </div>
+      </div>
       <div class="fsec">Disposisi, Status &amp; Deadline</div>
       <div class="frow c1"><div class="fg"><label>Disposisi Ke</label><input type="text" id="e-disposisi" maxlength="200"></div></div>
       <div class="frow c2">
@@ -814,6 +837,17 @@ td{padding:9px 12px;vertical-align:middle}
       </div>
       <div class="frow c1"><div class="fg"><label>Tujuan</label><input type="text" id="ek-tujuan" maxlength="200"></div></div>
       <div class="frow c1"><div class="fg"><label>Perihal</label><textarea id="ek-perihal" maxlength="500"></textarea></div></div>
+      <div class="frow c1">
+        <div class="fg"><label>Sifat Surat</label>
+          <select id="ek-sifat">
+            <option value="-">Pilih sifat surat...</option>
+            <option value="Biasa">Biasa</option>
+            <option value="Penting">Penting</option>
+            <option value="Rahasia">Rahasia</option>
+            <option value="Sangat Rahasia">Sangat Rahasia</option>
+          </select>
+        </div>
+      </div>
       <div class="fsec">Disposisi, Status &amp; Deadline</div>
       <div class="frow c1"><div class="fg"><label>Disposisi</label><input type="text" id="ek-disposisi" maxlength="200"></div></div>
       <div class="frow c2">
@@ -1216,7 +1250,7 @@ async function init() {
     dataIn = incoming.map((r,i) => ({
       id: i+1, ...r,
       no: Security.sanitize(r.no||''), pengirim: Security.sanitize(r.pengirim||''),
-      perihal: Security.sanitize(r.perihal||''), disposisi: Security.sanitize(r.disposisi||''),
+      perihal: Security.sanitize(r.perihal||''), sifat: Security.sanitize(r.sifat||'-'), disposisi: Security.sanitize(r.disposisi||''),
       status: normStIn(r.status), fileUrl: r.fileUrl||'',
       fileName: Security.sanitize(r.fileName||''), deadline: r.deadline||'',
       tgl: r.tanggal||r.tgl||''
@@ -1224,7 +1258,7 @@ async function init() {
     dataOut = outgoing.map((r,i) => ({
       id: i+1+1000000, ...r,
       no: Security.sanitize(r.no||''), tujuan: Security.sanitize(r.tujuan||''),
-      perihal: Security.sanitize(r.perihal||''), disposisi: Security.sanitize(r.disposisi||''),
+      perihal: Security.sanitize(r.perihal||''), sifat: Security.sanitize(r.sifat||'-'), disposisi: Security.sanitize(r.disposisi||''),
       status: normStOut(r.status), fileUrl: r.fileUrl||'',
       fileName: Security.sanitize(r.fileName||''), deadline: r.deadline||'',
       tgl: r.tanggal||r.tgl||''
@@ -1322,7 +1356,7 @@ async function tambahIn() {
   const no = $('f-no').value.trim(), tgl = $('f-tgl').value;
   if (!tgl) { toast('⚠️ Tanggal masuk wajib diisi', 'warn'); return; }
   const pengirim = $('f-pengirim').value.trim(), perihal = $('f-perihal').value.trim();
-  const disposisi = $('f-disposisi').value.trim(), status = $('f-status').value, deadline = $('f-deadline').value;
+  const sifat = $('f-sifat').value.trim() || '-', disposisi = $('f-disposisi').value.trim(), status = $('f-status').value, deadline = $('f-deadline').value;
   const btn = $('btn-add'); btn.disabled = true; btn.innerHTML = '<div class="sp sp-sm" style="margin-right:6px"></div>Menyimpan...';
   let fileUrl = '', fileName = '';
   if (selFileIn) {
@@ -1338,14 +1372,14 @@ async function tambahIn() {
   }
   try {
     setProgIn(selFileIn?90:40,'Menyimpan ke Sheets...');
-    const j = await gasPost({ action:'addIncoming', no, tanggal:toGasTgl(tgl), pengirim, perihal, disposisi:disposisi||'-', status, deadline:toGasTgl(deadline), fileUrl, fileName });
+    const j = await gasPost({ action:'addIncoming', no, tanggal:toGasTgl(tgl), pengirim, perihal, sifat, disposisi:disposisi||'-', status, deadline:toGasTgl(deadline), fileUrl, fileName });
     setProgIn(100,'Tersimpan!');
     if (j.status==='success') {
       toast('✅ Surat masuk berhasil disimpan!','success');
-      const newItem = { id:Date.now(), no:Security.sanitize(no), tgl, pengirim:Security.sanitize(pengirim), perihal:Security.sanitize(perihal), disposisi:Security.sanitize(disposisi), status, deadline, fileUrl, fileName:Security.sanitize(fileName) };
+      const newItem = { id:Date.now(), no:Security.sanitize(no), tgl, pengirim:Security.sanitize(pengirim), perihal:Security.sanitize(perihal), sifat:Security.sanitize(sifat), disposisi:Security.sanitize(disposisi), status, deadline, fileUrl, fileName:Security.sanitize(fileName) };
       dataIn.unshift(newItem); Cache.saveDataIn(dataIn);
       AuditLog.add('ADD_MASUK',`No: ${no}, Pengirim: ${pengirim}`);
-      ['f-no','f-pengirim','f-perihal','f-disposisi'].forEach(id => $(id).value='');
+      ['f-no','f-pengirim','f-perihal','f-disposisi','f-sifat'].forEach(id => $(id).value=''); $('f-sifat').value='-';
       $('f-tgl').valueAsDate=new Date(); $('f-deadline').value=''; $('f-status').value='Belum'; styleStatus($('f-status')); clearFileIn();
       updateTabCounts(); populatePengirim(); pageIn=1; applyFilterIn();
     } else toast('⚠️ '+Security.sanitize(j.message),'warn');
@@ -1370,7 +1404,7 @@ async function tambahOut() {
   const no = $('fk-no').value.trim(), tgl = $('fk-tgl').value;
   if (!tgl) { toast('⚠️ Tanggal keluar wajib diisi','warn'); return; }
   const tujuan = $('fk-tujuan').value.trim(), perihal = $('fk-perihal').value.trim();
-  const disposisi = $('fk-disposisi').value.trim(), status = $('fk-status').value, deadline = $('fk-deadline').value;
+  const sifat = $('fk-sifat').value.trim() || '-', disposisi = $('fk-disposisi').value.trim(), status = $('fk-status').value, deadline = $('fk-deadline').value;
   const btn = $('k-btn-add'); btn.disabled=true; btn.innerHTML='<div class="sp sp-sm" style="margin-right:6px"></div>Menyimpan...';
   let fileUrl='', fileName='';
   if (selFileOut) {
@@ -1386,14 +1420,14 @@ async function tambahOut() {
   }
   try {
     setProgOut(selFileOut?90:40,'Menyimpan ke Sheets...');
-    const j=await gasPost({ action:'addOutgoing', no, tanggal:toGasTgl(tgl), tujuan, perihal, disposisi:disposisi||'-', status, deadline:toGasTgl(deadline), fileUrl, fileName });
+    const j=await gasPost({ action:'addOutgoing', no, tanggal:toGasTgl(tgl), tujuan, perihal, sifat, disposisi:disposisi||'-', status, deadline:toGasTgl(deadline), fileUrl, fileName });
     setProgOut(100,'Tersimpan!');
     if (j.status==='success') {
       toast('✅ Surat keluar berhasil disimpan!','success');
-      const newItem = { id:Date.now()+1000000, no:Security.sanitize(no), tgl, tujuan:Security.sanitize(tujuan), perihal:Security.sanitize(perihal), disposisi:Security.sanitize(disposisi), status, deadline, fileUrl, fileName:Security.sanitize(fileName) };
+      const newItem = { id:Date.now()+1000000, no:Security.sanitize(no), tgl, tujuan:Security.sanitize(tujuan), perihal:Security.sanitize(perihal), sifat:Security.sanitize(sifat), disposisi:Security.sanitize(disposisi), status, deadline, fileUrl, fileName:Security.sanitize(fileName) };
       dataOut.unshift(newItem); Cache.saveDataOut(dataOut);
       AuditLog.add('ADD_KELUAR',`No: ${no}, Tujuan: ${tujuan}`);
-      ['fk-no','fk-tujuan','fk-perihal','fk-disposisi'].forEach(id => $(id).value='');
+      ['fk-no','fk-tujuan','fk-perihal','fk-disposisi','fk-sifat'].forEach(id => $(id).value=''); $('fk-sifat').value='-';
       $('fk-tgl').valueAsDate=new Date(); $('fk-deadline').value=''; $('fk-status').value='Draft'; styleStatusOut($('fk-status')); clearFileOut();
       updateTabCounts(); populateTujuan(); pageOut=1; applyFilterOut();
     } else toast('⚠️ '+Security.sanitize(j.message),'warn');
@@ -1407,7 +1441,8 @@ async function tambahOut() {
 function openEditIn(id) {
   const d = dataIn.find(x => x.id===id); if (!d) return;
   $('e-orig-no').value=d.no; $('e-no').value=d.no; $('e-tgl').value=toInputDate(d.tgl||d.tanggal||'');
-  $('e-pengirim').value=d.pengirim; $('e-perihal').value=d.perihal; $('e-disposisi').value=d.disposisi;
+  $('e-pengirim').value=d.pengirim; $('e-perihal').value=d.perihal; $('e-sifat').value=d.sifat||'-';
+  $('e-disposisi').value=d.disposisi;
   $('e-status').value=d.status; styleStatus($('e-status'));
   $('e-deadline').value=toInputDate(d.deadline||''); $('e-file-url').value=d.fileUrl||''; $('e-file-name').value=d.fileName||'';
   $('edit-modal').classList.add('show'); setTimeout(() => $('e-no').focus(), 80);
@@ -1417,15 +1452,15 @@ async function saveEditIn() {
   const btn=$('btn-save-edit'); btn.disabled=true; btn.innerHTML='<div class="sp sp-md" style="margin-right:5px"></div>Menyimpan...';
   const origNo=$('e-orig-no').value, no=($('e-no').value||'').trim(), tgl=$('e-tgl').value;
   const pengirim=($('e-pengirim').value||'').trim(), perihal=($('e-perihal').value||'').trim();
-  const disposisi=($('e-disposisi').value||'').trim(), status=$('e-status').value, deadline=$('e-deadline').value;
+  const sifat=($('e-sifat').value||'').trim()||'-', disposisi=($('e-disposisi').value||'').trim(), status=$('e-status').value, deadline=$('e-deadline').value;
   const fileUrl=$('e-file-url').value, fileName=$('e-file-name').value;
   const err = Security.validateField(no,'No. Surat',100)||Security.validateField(pengirim,'Pengirim',200)||Security.validateField(perihal,'Perihal',500);
   if (err) { toast('⚠️ '+err,'warn'); btn.disabled=false; btn.innerHTML='💾 Simpan Perubahan'; return; }
   try {
-    const j=await gasPost({ action:'updateIncoming', originalNo:origNo, no, tanggal:toGasTgl(tgl), pengirim, perihal, disposisi:disposisi||'-', status, deadline:toGasTgl(deadline), fileUrl, fileName });
+    const j=await gasPost({ action:'updateIncoming', originalNo:origNo, no, tanggal:toGasTgl(tgl), pengirim, perihal, sifat, disposisi:disposisi||'-', status, deadline:toGasTgl(deadline), fileUrl, fileName });
     if (j.status==='success') {
       const idx=dataIn.findIndex(x=>x.no===origNo);
-      if (idx>=0) dataIn[idx]={...dataIn[idx],no:Security.sanitize(no),tgl,pengirim:Security.sanitize(pengirim),perihal:Security.sanitize(perihal),disposisi:Security.sanitize(disposisi),status,deadline,fileUrl,fileName:Security.sanitize(fileName)};
+      if (idx>=0) dataIn[idx]={...dataIn[idx],no:Security.sanitize(no),tgl,pengirim:Security.sanitize(pengirim),perihal:Security.sanitize(perihal),sifat:Security.sanitize(sifat),disposisi:Security.sanitize(disposisi),status,deadline,fileUrl,fileName:Security.sanitize(fileName)};
       Cache.saveDataIn(dataIn); AuditLog.add('EDIT_MASUK',`${origNo}→${no}`);
       toast('✅ Data surat masuk diperbarui!','success'); closeEditIn(); populatePengirim(); applyFilterIn();
     } else toast('⚠️ '+Security.sanitize(j.message),'warn');
@@ -1439,7 +1474,8 @@ async function saveEditIn() {
 function openEditOut(id) {
   const d = dataOut.find(x => x.id===id); if (!d) return;
   $('ek-orig-no').value=d.no; $('ek-no').value=d.no; $('ek-tgl').value=toInputDate(d.tgl||d.tanggal||'');
-  $('ek-tujuan').value=d.tujuan; $('ek-perihal').value=d.perihal; $('ek-disposisi').value=d.disposisi;
+  $('ek-tujuan').value=d.tujuan; $('ek-perihal').value=d.perihal; $('ek-sifat').value=d.sifat||'-';
+  $('ek-disposisi').value=d.disposisi;
   $('ek-status').value=d.status; styleStatusOut($('ek-status'));
   $('ek-deadline').value=toInputDate(d.deadline||''); $('ek-file-url').value=d.fileUrl||''; $('ek-file-name').value=d.fileName||'';
   $('edit-modal-k').classList.add('show'); setTimeout(() => $('ek-no').focus(), 80);
@@ -1449,15 +1485,15 @@ async function saveEditOut() {
   const btn=$('btn-save-edit-k'); btn.disabled=true; btn.innerHTML='<div class="sp sp-md" style="margin-right:5px"></div>Menyimpan...';
   const origNo=$('ek-orig-no').value, no=($('ek-no').value||'').trim(), tgl=$('ek-tgl').value;
   const tujuan=($('ek-tujuan').value||'').trim(), perihal=($('ek-perihal').value||'').trim();
-  const disposisi=($('ek-disposisi').value||'').trim(), status=$('ek-status').value, deadline=$('ek-deadline').value;
+  const sifat=($('ek-sifat').value||'').trim()||'-', disposisi=($('ek-disposisi').value||'').trim(), status=$('ek-status').value, deadline=$('ek-deadline').value;
   const fileUrl=$('ek-file-url').value, fileName=$('ek-file-name').value;
   const err = Security.validateField(no,'No. Surat',100)||Security.validateField(tujuan,'Tujuan',200)||Security.validateField(perihal,'Perihal',500);
   if (err) { toast('⚠️ '+err,'warn'); btn.disabled=false; btn.innerHTML='💾 Simpan Perubahan'; return; }
   try {
-    const j=await gasPost({ action:'updateOutgoing', originalNo:origNo, no, tanggal:toGasTgl(tgl), tujuan, perihal, disposisi:disposisi||'-', status, deadline:toGasTgl(deadline), fileUrl, fileName });
+    const j=await gasPost({ action:'updateOutgoing', originalNo:origNo, no, tanggal:toGasTgl(tgl), tujuan, perihal, sifat, disposisi:disposisi||'-', status, deadline:toGasTgl(deadline), fileUrl, fileName });
     if (j.status==='success') {
       const idx=dataOut.findIndex(x=>x.no===origNo);
-      if (idx>=0) dataOut[idx]={...dataOut[idx],no:Security.sanitize(no),tgl,tujuan:Security.sanitize(tujuan),perihal:Security.sanitize(perihal),disposisi:Security.sanitize(disposisi),status,deadline,fileUrl,fileName:Security.sanitize(fileName)};
+      if (idx>=0) dataOut[idx]={...dataOut[idx],no:Security.sanitize(no),tgl,tujuan:Security.sanitize(tujuan),perihal:Security.sanitize(perihal),sifat:Security.sanitize(sifat),disposisi:Security.sanitize(disposisi),status,deadline,fileUrl,fileName:Security.sanitize(fileName)};
       Cache.saveDataOut(dataOut); AuditLog.add('EDIT_KELUAR',`${origNo}→${no}`);
       toast('✅ Data surat keluar diperbarui!','success'); closeEditOut(); populateTujuan(); applyFilterOut();
     } else toast('⚠️ '+Security.sanitize(j.message),'warn');
@@ -1478,7 +1514,7 @@ async function delRowIn(id) {
   UndoManager.push(async () => {
     dataIn = snapshot; Cache.saveDataIn(dataIn); updateTabCounts(); populatePengirim(); applyFilterIn();
     try {
-      await gasPost({ action:'addIncoming', no:d.no, tanggal:toGasTgl(d.tgl), pengirim:d.pengirim, perihal:d.perihal, disposisi:d.disposisi||'-', status:d.status, deadline:toGasTgl(d.deadline), fileUrl:d.fileUrl, fileName:d.fileName });
+      await gasPost({ action:'addIncoming', no:d.no, tanggal:toGasTgl(d.tgl), pengirim:d.pengirim, perihal:d.perihal, sifat:d.sifat||'-', disposisi:d.disposisi||'-', status:d.status, deadline:toGasTgl(d.deadline), fileUrl:d.fileUrl, fileName:d.fileName });
       AuditLog.add('UNDO_DEL_MASUK', `No: ${d.no}`); toast('↩️ Surat masuk dipulihkan','success');
     } catch { toast('⚠️ Undo berhasil di lokal, gagal sinkron ke Sheets','warn'); }
   }, `Surat masuk "${d.no}" dihapus — Undo?`);
@@ -1495,7 +1531,7 @@ async function delRowOut(id) {
   UndoManager.push(async () => {
     dataOut = snapshot; Cache.saveDataOut(dataOut); updateTabCounts(); populateTujuan(); applyFilterOut();
     try {
-      await gasPost({ action:'addOutgoing', no:d.no, tanggal:toGasTgl(d.tgl), tujuan:d.tujuan, perihal:d.perihal, disposisi:d.disposisi||'-', status:d.status, deadline:toGasTgl(d.deadline), fileUrl:d.fileUrl, fileName:d.fileName });
+      await gasPost({ action:'addOutgoing', no:d.no, tanggal:toGasTgl(d.tgl), tujuan:d.tujuan, perihal:d.perihal, sifat:d.sifat||'-', disposisi:d.disposisi||'-', status:d.status, deadline:toGasTgl(d.deadline), fileUrl:d.fileUrl, fileName:d.fileName });
       toast('↩️ Surat keluar dipulihkan','success');
     } catch { toast('⚠️ Undo berhasil di lokal, gagal sinkron ke Sheets','warn'); }
   }, `Surat keluar "${d.no}" dihapus — Undo?`);
@@ -1804,7 +1840,7 @@ function renderTableIn() {
 function renderTableOut() {
   $('rc-out').textContent=filteredOut.length+' surat';
   const tb=$('tbody-out');
-  if(!filteredOut.length){tb.innerHTML=`<tr class="empty"><td colspan="10">📭 Tidak ada data surat keluar</td></tr>`;renderPagination(0,pageOut,perPageOut,'pg-info-out','pg-controls-out','goPageOut');return;}
+  if(!filteredOut.length){tb.innerHTML=`<tr class="empty"><td colspan="11">📭 Tidak ada data surat keluar</td></tr>`;renderPagination(0,pageOut,perPageOut,'pg-info-out','pg-controls-out','goPageOut');return;}
   const start=(pageOut-1)*perPageOut;
   tb.innerHTML=filteredOut.slice(start,start+perPageOut).map((d,i)=>{
     const days=deadlineDays(d.deadline);
@@ -1815,6 +1851,7 @@ function renderTableOut() {
       <td class="mono" style="color:var(--muted);white-space:nowrap">${fmtTgl(d.tgl||d.tanggal||'')}</td>
       <td style="font-size:11.5px;max-width:140px">${Security.sanitize(d.tujuan)}</td>
       <td style="max-width:160px;font-size:11.5px">${Security.sanitize(d.perihal)}</td>
+      <td style="font-size:11.5px">${Security.sanitize(d.sifat||'-')}</td>
       <td style="font-size:11.5px">${Security.sanitize(d.disposisi||'—')}</td>
       <td>${badgeOut(d.status)}</td>
       <td>${dlBadge(d.deadline,d.status)}</td>
@@ -1834,8 +1871,8 @@ function renderTableOut() {
 // ════════════════════════════════════════
 function exportCSVIn() {
   if(!Security.rateLimit('csv-in',2000))return;
-  const hdr=['No Surat','Tanggal','Pengirim','Perihal','Disposisi','Status','Deadline','File'];
-  const rows=filteredIn.map(d=>[d.no,d.tgl||d.tanggal||'',d.pengirim,d.perihal,d.disposisi||'',d.status,d.deadline||'',d.fileName||'']);
+  const hdr=['No Surat','Tanggal','Pengirim','Perihal','Sifat Surat','Disposisi','Status','Deadline','File'];
+  const rows=filteredIn.map(d=>[d.no,d.tgl||d.tanggal||'',d.pengirim,d.perihal,d.sifat||'-',d.disposisi||'',d.status,d.deadline||'',d.fileName||'']);
   const csv=[hdr,...rows].map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
   a.download='SuratMasuk_'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
@@ -1854,8 +1891,8 @@ function exportExcelIn() {
 }
 function exportCSVOut() {
   if(!Security.rateLimit('csv-out',2000))return;
-  const hdr=['No Surat','Tanggal','Tujuan','Perihal','Disposisi','Status','Deadline','File'];
-  const rows=filteredOut.map(d=>[d.no,d.tgl||d.tanggal||'',d.tujuan,d.perihal,d.disposisi||'',d.status,d.deadline||'',d.fileName||'']);
+  const hdr=['No Surat','Tanggal','Tujuan','Perihal','Sifat Surat','Disposisi','Status','Deadline','File'];
+  const rows=filteredOut.map(d=>[d.no,d.tgl||d.tanggal||'',d.tujuan,d.perihal,d.sifat||'-',d.disposisi||'',d.status,d.deadline||'',d.fileName||'']);
   const csv=[hdr,...rows].map(r=>r.map(c=>`"${String(c||'').replace(/"/g,'""')}"`).join(',')).join('\n');
   const a=document.createElement('a'); a.href='data:text/csv;charset=utf-8,\uFEFF'+encodeURIComponent(csv);
   a.download='SuratKeluar_'+new Date().toISOString().slice(0,10)+'.csv'; a.click();
