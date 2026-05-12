@@ -1,4 +1,4 @@
-import { fetchSheetData, saveSheetData, updateSheetData, deleteSheetData, saveLocalCache, readLocalCache, createLocalCacheKey, handleApiError } from './api.js';
+import { fetchSheetData, saveSheetData, updateSheetData, deleteSheetData, saveLocalCache, readLocalCache, createLocalCacheKey, handleApiError, isNetworkError } from './api.js';
 import { showToast, generateId, isValidMailNumber, formatDate } from './utilities.js';
 import { createIncomingRecord, createOutgoingRecord, state, setIncoming, setOutgoing } from './data-manager.js';
 import { validateAttachment, uploadAttachment } from './file-manager.js';
@@ -28,6 +28,10 @@ export async function loadInitialData() {
     }
     return { incoming: state.incoming, outgoing: state.outgoing };
   } catch (error) {
+    if (isNetworkError(error)) {
+      showToast('Tidak dapat memuat data dari server. Menggunakan cache lokal.', 'warn');
+      return { incoming: state.incoming, outgoing: state.outgoing };
+    }
     handleApiError(error);
     return { incoming: state.incoming, outgoing: state.outgoing };
   }
@@ -75,7 +79,7 @@ export async function createIncoming(payload) {
     }
     throw new Error(response?.message || 'Gagal menyimpan surat masuk.');
   } catch (error) {
-    if (error.message.includes('GAS_URL')) {
+    if (error.message.includes('GAS_URL') || isNetworkError(error)) {
       state.incoming.unshift(record);
       saveLocalCache(LOCAL_SHEETS.incoming, state.incoming);
       showToast('Surat masuk disimpan lokal dan akan disinkronkan nanti.', 'caut');
@@ -103,7 +107,7 @@ export async function createOutgoing(payload) {
     }
     throw new Error(response?.message || 'Gagal menyimpan surat keluar.');
   } catch (error) {
-    if (error.message.includes('GAS_URL')) {
+    if (error.message.includes('GAS_URL') || isNetworkError(error)) {
       state.outgoing.unshift(record);
       saveLocalCache(LOCAL_SHEETS.outgoing, state.outgoing);
       showToast('Surat keluar disimpan lokal dan akan disinkronkan nanti.', 'caut');
@@ -137,7 +141,7 @@ export async function updateRecord(type, id, payload) {
     }
     throw new Error(response?.message || 'Gagal memperbarui data.');
   } catch (error) {
-    if (error.message.includes('GAS_URL') || error.message.includes('tidak dikonfigurasi')) {
+    if (error.message.includes('GAS_URL') || error.message.includes('tidak dikonfigurasi') || isNetworkError(error)) {
       const list = state[type];
       const index = list.findIndex((item) => item.id === id);
       if (index >= 0) {
@@ -168,7 +172,7 @@ export async function deleteRecord(type, id) {
     }
     throw new Error(response?.message || 'Gagal menghapus data.');
   } catch (error) {
-    if (error.message.includes('GAS_URL') || error.message.includes('tidak dikonfigurasi')) {
+    if (error.message.includes('GAS_URL') || error.message.includes('tidak dikonfigurasi') || isNetworkError(error)) {
       const list = state[type];
       const filtered = list.filter((item) => item.id !== id);
       if (type === 'incoming') {

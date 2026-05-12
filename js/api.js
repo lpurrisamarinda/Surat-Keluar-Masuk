@@ -95,6 +95,11 @@ export async function pingBackend() {
   }
 }
 
+export function isNetworkError(error) {
+  const message = String(error?.message || '').toLowerCase();
+  return /failed to fetch|tidak dapat terhubung|timeout|time out|networkerror|network error/.test(message);
+}
+
 export function createLocalCacheKey(sheetName) {
   return `skm-cache-${sheetName}`;
 }
@@ -113,5 +118,9 @@ export function readLocalCache(sheetName) {
 }
 
 export function handleApiError(error) {
+  if (isNetworkError(error)) {
+    showToast('Tidak dapat terhubung ke server. Menggunakan data lokal jika tersedia.', 'warn');
+    return;
+  }
   showToast(error?.message || 'Terjadi kesalahan jaringan.', 'error');
 }
