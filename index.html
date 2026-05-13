@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
 <meta charset="UTF-8">
@@ -333,36 +333,56 @@ td{padding:9px 12px;vertical-align:middle}
 .footer{text-align:center;padding:20px;font-size:11px;color:var(--muted);border-top:1px solid var(--border);margin-top:24px}
 .app-content.hidden{display:none}
 
+/* ══ CHART FILTER BAR ══ */
+.chart-filter-bar{display:flex;gap:6px;flex-wrap:wrap;padding:10px 16px;border-bottom:1px solid var(--border);background:var(--card-alt)}
+.chart-filter-bar select{font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;border:1.5px solid var(--border);border-radius:7px;padding:4px 22px 4px 8px;-webkit-appearance:none;appearance:none;background:var(--card);color:var(--text);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 6px center;cursor:pointer;min-height:30px;outline:none}
+.chart-filter-bar select:focus{border-color:var(--navy)}
+.chart-type-btn{font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:700;border:1.5px solid var(--border);border-radius:7px;padding:4px 10px;cursor:pointer;background:var(--card);color:var(--muted);transition:all var(--t-fast);min-height:30px}
+.chart-type-btn.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+
 /* ══ RESPONSIVE ══ */
 @media(max-width:900px){
   .stats{grid-template-columns:repeat(3,1fr)}.s5{display:none}
   .grid2{grid-template-columns:1fr}.filter-grid{grid-template-columns:1fr 1fr}.filter-acts{grid-column:1/-1}
-  .chart-wrap{height:180px}
+  .chart-wrap{height:190px}
 }
 @media(max-width:600px){
-  .main{padding:12px 14px}.header{padding:12px 14px}.htitle{font-size:13.5px}
+  .main{padding:10px 12px}.header{padding:10px 12px}.htitle{font-size:13px}
   .conn-badge span:last-child{display:none}
-  .stats{grid-template-columns:repeat(2,1fr);gap:9px}.s4,.s5{display:none}
-  .stat{padding:12px 12px}.stat-val{font-size:26px}
+  .stats{grid-template-columns:repeat(2,1fr);gap:8px}.s4,.s5{display:none}
+  .stat{padding:11px 12px}.stat-val{font-size:24px}.stat-lbl{font-size:9px}
   .frow.c2{grid-template-columns:1fr}.filter-grid{grid-template-columns:1fr}
-  .card-head{flex-direction:column;align-items:flex-start}
+  .card-head{flex-direction:column;align-items:flex-start;gap:6px}
   .table-toolbar{width:100%}.sw{min-width:100%;flex-basis:100%}
-  .table-wrap{border-radius:0}.table{min-width:650px}
-  thead th{padding:8px 10px;font-size:9px}.td{padding:8px 10px}
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:0}
+  table{min-width:580px;font-size:11.5px}
+  thead th{padding:9px 10px;font-size:9px;letter-spacing:.4px}
+  td{padding:8px 10px}
+  /* Hide non-essential columns on mobile - ID column and Sifat Surat */
+  th:first-child,td:first-child{display:none}
+  th[data-col="sifat"],td[data-col="sifat"]{display:none}
   .pagination{flex-direction:column;align-items:flex-start;gap:8px}.pg-controls{flex-wrap:wrap}
   .modal{max-height:100vh;border-radius:16px 16px 0 0;position:fixed;bottom:0;left:0;right:0;max-width:100%}
   .modal-ov{align-items:flex-end;padding:0}
   .prev-modal{max-height:90vh;border-radius:16px 16px 0 0;width:100%;max-width:100%}
-  .btn-act{min-height:34px;padding:5px 10px}.btn-sm{min-height:34px}.btn-f{min-height:38px}
-  .btn-add{min-height:48px;font-size:13.5px}.upload-zone{padding:16px}
-  .filter-panel{padding:12px 12px}
-  .toast{left:14px;right:14px;bottom:14px;max-width:none}
-  .undo-bar{left:14px;right:14px;bottom:14px;min-width:auto;transform:translateX(0) translateY(80px)}
+  /* Larger touch targets for action buttons */
+  .btn-act{min-height:40px;min-width:40px;padding:6px 11px;font-size:11px}
+  .acts{gap:5px}
+  .btn-sm{min-height:36px}.btn-f{min-height:40px}
+  .btn-add{min-height:50px;font-size:14px}.upload-zone{padding:16px}
+  .filter-panel{padding:11px 12px}
+  .toast{left:12px;right:12px;bottom:12px;max-width:none;font-size:12.5px}
+  .undo-bar{left:12px;right:12px;bottom:12px;min-width:auto;transform:translateX(0) translateY(80px)}
   .undo-bar.show{transform:translateX(0) translateY(0)}
-  .tab-btn{font-size:11px;padding:8px 10px}
+  .tab-btn{font-size:11.5px;padding:9px 10px;gap:5px}
+  .chart-wrap{height:170px}
+  .chart-filter-bar{padding:8px 12px;gap:5px}
+  .chart-filter-bar select{font-size:10.5px}
 }
 @media(max-width:380px){
-  .stats{grid-template-columns:repeat(2,1fr)}.s3,.s4,.s5{display:none}.btn-hdr{display:none}
+  .stats{grid-template-columns:repeat(2,1fr)}.s3,.s4,.s5{display:none}
+  .btn-hdr:not(#btn-theme){display:none}
+  table{min-width:480px}
 }
 @media print{
   .header,.filter-panel,.btn-add,.btn-sm,.btn-act,.btn-exp,.pagination,.footer,
@@ -498,6 +518,18 @@ td{padding:9px 12px;vertical-align:middle}
             <div class="card-title">📊 Status Surat Masuk</div>
             <span style="font-size:10px;color:var(--muted)" id="sync-time"></span>
           </div>
+          <div class="chart-filter-bar">
+            <select id="chart-in-type" onchange="onChartInTypeChange()" aria-label="Tipe grafik">
+              <option value="bar">📊 Bar</option>
+              <option value="doughnut">🍩 Donut</option>
+            </select>
+            <select id="chart-in-filter" onchange="onChartInFilterChange()" aria-label="Filter data grafik">
+              <option value="all">Semua Status</option>
+              <option value="Belum">Belum Ditindaklanjuti</option>
+              <option value="Proses">Sedang Diproses</option>
+              <option value="Selesai">Sudah Selesai</option>
+            </select>
+          </div>
           <div class="card-body"><div class="chart-wrap"><canvas id="myChart" aria-label="Grafik status surat masuk" role="img"></canvas></div></div>
         </div>
 
@@ -516,24 +548,12 @@ td{padding:9px 12px;vertical-align:middle}
               <div class="fg"><label for="f-pengirim">Pengirim *</label><input type="text" id="f-pengirim" placeholder="Nama instansi / pengirim" autocomplete="off" maxlength="200"><span class="field-err" id="f-pengirim-err" role="alert">Pengirim wajib diisi</span></div>
             </div>
             <div class="frow c1">
-              <div class="fg"><label for="f-perihal">Perihal *</label><textarea id="f-perihal" placeholder="Tuliskan perihal surat..." maxlength="500"></textarea><span class="field-err" id="f-perihal-err" role="alert">Perihal wajib diisi</span></div>
-            </div>
-            <div class="frow c1">
               <div class="fg"><label for="f-sifat">Sifat Surat</label><input type="text" id="f-sifat" placeholder="Biasa, Penting, Rahasia, dll" maxlength="100"></div>
             </div>
-            <div class="fsec">Disposisi, Status &amp; Deadline</div>
-            <div class="frow c1"><div class="fg"><label for="f-disposisi">Disposisi Ke</label><input type="text" id="f-disposisi" placeholder="Nama / bagian tujuan" maxlength="200"></div></div>
-            <div class="frow c2">
-              <div class="fg"><label for="f-status">Status Awal</label>
-                <select id="f-status" onchange="styleStatus(this)">
-                  <option value="Belum">⏳ Belum Ditindaklanjuti</option>
-                  <option value="Proses">🔄 Sedang Diproses</option>
-                  <option value="Selesai">✅ Sudah Selesai</option>
-                </select>
-              </div>
-              <div class="fg"><label for="f-deadline">⏰ Deadline</label><input type="date" id="f-deadline"></div>
+            <div class="frow c1">
+              <div class="fg"><label for="f-perihal">Perihal *</label><textarea id="f-perihal" placeholder="Tuliskan perihal surat..." maxlength="500"></textarea><span class="field-err" id="f-perihal-err" role="alert">Perihal wajib diisi</span></div>
             </div>
-            <div class="fsec">📎 File Surat</div>
+            <div class="fsec">📎 File Surat &amp; Disposisi</div>
             <div class="upload-zone" id="upload-zone" role="button" tabindex="0" aria-label="Upload file — klik atau seret"
               ondragover="event.preventDefault();$('upload-zone').classList.add('drag')"
               ondragleave="$('upload-zone').classList.remove('drag')"
@@ -546,6 +566,18 @@ td{padding:9px 12px;vertical-align:middle}
             </div>
             <div class="fp" id="fp"><span id="fp-ico">📄</span><div style="flex:1;min-width:0"><div class="fp-name" id="fp-name"></div><div class="fp-size" id="fp-size"></div></div><button class="fp-rm" onclick="clearFileIn()" aria-label="Hapus file">✕</button></div>
             <div class="prog-wrap" id="prog-wrap"><div class="prog-bg"><div class="prog-bar" id="prog-bar"></div></div><div class="prog-txt" id="prog-txt"></div></div>
+            <div class="frow c1"><div class="fg"><label for="f-disposisi">Disposisi Ke</label><input type="text" id="f-disposisi" placeholder="Nama / bagian tujuan" maxlength="200"></div></div>
+            <div class="fsec">Status &amp; Deadline</div>
+            <div class="frow c2">
+              <div class="fg"><label for="f-status">Status Awal</label>
+                <select id="f-status" onchange="styleStatus(this)">
+                  <option value="Belum">⏳ Belum Ditindaklanjuti</option>
+                  <option value="Proses">🔄 Sedang Diproses</option>
+                  <option value="Selesai">✅ Sudah Selesai</option>
+                </select>
+              </div>
+              <div class="fg"><label for="f-deadline">⏰ Deadline</label><input type="date" id="f-deadline"></div>
+            </div>
             <button class="btn-add" id="btn-add" onclick="tambahIn()"><span style="font-size:15px">+</span> Tambah &amp; Simpan ke Sheets</button>
           </div>
         </div>
@@ -595,7 +627,7 @@ td{padding:9px 12px;vertical-align:middle}
                 <th class="sa" onclick="sortByIn('tgl')">Tanggal</th>
                 <th class="sa" onclick="sortByIn('pengirim')">Pengirim</th>
                 <th>Perihal</th>
-                <th>Sifat Surat</th>
+                <th data-col="sifat">Sifat Surat</th>
                 <th>Disposisi</th>
                 <th class="sa" onclick="sortByIn('status')">Status</th>
                 <th class="sa" onclick="sortByIn('deadline')">Deadline</th>
@@ -644,6 +676,18 @@ td{padding:9px 12px;vertical-align:middle}
             <div class="card-title">📊 Status Surat Keluar</div>
             <span style="font-size:10px;color:var(--muted)" id="k-sync-time"></span>
           </div>
+          <div class="chart-filter-bar">
+            <select id="chart-out-type" onchange="onChartOutTypeChange()" aria-label="Tipe grafik keluar">
+              <option value="bar">📊 Bar</option>
+              <option value="doughnut">🍩 Donut</option>
+            </select>
+            <select id="chart-out-filter" onchange="onChartOutFilterChange()" aria-label="Filter data grafik keluar">
+              <option value="all">Semua Status</option>
+              <option value="Draft">Draft</option>
+              <option value="Terkirim">Terkirim</option>
+              <option value="Selesai">Selesai</option>
+            </select>
+          </div>
           <div class="card-body"><div class="chart-wrap"><canvas id="k-myChart" aria-label="Grafik status surat keluar" role="img"></canvas></div></div>
         </div>
 
@@ -662,24 +706,12 @@ td{padding:9px 12px;vertical-align:middle}
               <div class="fg"><label for="fk-tujuan">Tujuan *</label><input type="text" id="fk-tujuan" placeholder="Nama instansi / tujuan" autocomplete="off" maxlength="200"><span class="field-err" id="fk-tujuan-err" role="alert">Tujuan wajib diisi</span></div>
             </div>
             <div class="frow c1">
-              <div class="fg"><label for="fk-perihal">Perihal *</label><textarea id="fk-perihal" placeholder="Tuliskan perihal surat..." maxlength="500"></textarea><span class="field-err" id="fk-perihal-err" role="alert">Perihal wajib diisi</span></div>
-            </div>
-            <div class="frow c1">
               <div class="fg"><label for="fk-sifat">Sifat Surat</label><input type="text" id="fk-sifat" placeholder="Biasa, Penting, Rahasia, dll" maxlength="100"></div>
             </div>
-            <div class="fsec">Disposisi, Status &amp; Deadline</div>
-            <div class="frow c1"><div class="fg"><label for="fk-disposisi">Disposisi</label><input type="text" id="fk-disposisi" placeholder="Nama / bagian terkait" maxlength="200"></div></div>
-            <div class="frow c2">
-              <div class="fg"><label for="fk-status">Status Awal</label>
-                <select id="fk-status" onchange="styleStatusOut(this)">
-                  <option value="Draft">📝 Draft</option>
-                  <option value="Terkirim">✉️ Terkirim</option>
-                  <option value="Selesai">✅ Selesai</option>
-                </select>
-              </div>
-              <div class="fg"><label for="fk-deadline">⏰ Deadline</label><input type="date" id="fk-deadline"></div>
+            <div class="frow c1">
+              <div class="fg"><label for="fk-perihal">Perihal *</label><textarea id="fk-perihal" placeholder="Tuliskan perihal surat..." maxlength="500"></textarea><span class="field-err" id="fk-perihal-err" role="alert">Perihal wajib diisi</span></div>
             </div>
-            <div class="fsec">📎 File Surat</div>
+            <div class="fsec">📎 File Surat &amp; Disposisi</div>
             <div class="upload-zone" id="k-upload-zone" role="button" tabindex="0" aria-label="Upload file — klik atau seret"
               ondragover="event.preventDefault();$('k-upload-zone').classList.add('drag')"
               ondragleave="$('k-upload-zone').classList.remove('drag')"
@@ -692,6 +724,18 @@ td{padding:9px 12px;vertical-align:middle}
             </div>
             <div class="fp" id="k-fp"><span id="k-fp-ico">📄</span><div style="flex:1;min-width:0"><div class="fp-name" id="k-fp-name"></div><div class="fp-size" id="k-fp-size"></div></div><button class="fp-rm" onclick="clearFileOut()" aria-label="Hapus file">✕</button></div>
             <div class="prog-wrap" id="k-prog-wrap"><div class="prog-bg"><div class="prog-bar" id="k-prog-bar"></div></div><div class="prog-txt" id="k-prog-txt"></div></div>
+            <div class="frow c1"><div class="fg"><label for="fk-disposisi">Disposisi</label><input type="text" id="fk-disposisi" placeholder="Nama / bagian terkait" maxlength="200"></div></div>
+            <div class="fsec">Status &amp; Deadline</div>
+            <div class="frow c2">
+              <div class="fg"><label for="fk-status">Status Awal</label>
+                <select id="fk-status" onchange="styleStatusOut(this)">
+                  <option value="Draft">📝 Draft</option>
+                  <option value="Terkirim">✉️ Terkirim</option>
+                  <option value="Selesai">✅ Selesai</option>
+                </select>
+              </div>
+              <div class="fg"><label for="fk-deadline">⏰ Deadline</label><input type="date" id="fk-deadline"></div>
+            </div>
             <button class="btn-add" id="k-btn-add" onclick="tambahOut()"><span style="font-size:15px">+</span> Tambah &amp; Simpan ke Sheets</button>
           </div>
         </div>
@@ -1236,7 +1280,7 @@ async function init() {
       no: Security.sanitize(r.no||''), pengirim: Security.sanitize(r.pengirim||''),
       perihal: Security.sanitize(r.perihal||''), sifat: Security.sanitize(r.sifat||'-'), disposisi: Security.sanitize(r.disposisi||''),
       status: normStIn(r.status), fileUrl: r.fileUrl||'',
-      fileName: Security.sanitize(r.fileName||''), deadline: r.deadline||'',
+      fileName: Security.sanitize(r.fileName||''), deadline: r.deadline||r.deadline_date||r.deadlineDate||'',
       tgl: r.tanggal||r.tgl||''
     }));
     dataOut = outgoing.map((r,i) => ({
@@ -1244,7 +1288,7 @@ async function init() {
       no: Security.sanitize(r.no||''), tujuan: Security.sanitize(r.tujuan||''),
       perihal: Security.sanitize(r.perihal||''), sifat: Security.sanitize(r.sifat||'-'), disposisi: Security.sanitize(r.disposisi||''),
       status: normStOut(r.status), fileUrl: r.fileUrl||'',
-      fileName: Security.sanitize(r.fileName||''), deadline: r.deadline||'',
+      fileName: Security.sanitize(r.fileName||''), deadline: r.deadline||r.deadline_date||r.deadlineDate||'',
       tgl: r.tanggal||r.tgl||''
     }));
     Cache.saveDataIn(dataIn); Cache.saveDataOut(dataOut); updateCacheInfo();
@@ -1286,13 +1330,13 @@ async function doRefresh() {
       id: i+1, ...r, no: Security.sanitize(r.no||''), pengirim: Security.sanitize(r.pengirim||''),
       perihal: Security.sanitize(r.perihal||''), disposisi: Security.sanitize(r.disposisi||''),
       status: normStIn(r.status), fileUrl: r.fileUrl||'', fileName: Security.sanitize(r.fileName||''),
-      deadline: r.deadline||'', tgl: r.tanggal||r.tgl||''
+      deadline: r.deadline||r.deadline_date||r.deadlineDate||'', tgl: r.tanggal||r.tgl||''
     }));
     dataOut = outgoing.map((r,i) => ({
       id: i+1+1000000, ...r, no: Security.sanitize(r.no||''), tujuan: Security.sanitize(r.tujuan||''),
       perihal: Security.sanitize(r.perihal||''), disposisi: Security.sanitize(r.disposisi||''),
       status: normStOut(r.status), fileUrl: r.fileUrl||'', fileName: Security.sanitize(r.fileName||''),
-      deadline: r.deadline||'', tgl: r.tanggal||r.tgl||''
+      deadline: r.deadline||r.deadline_date||r.deadlineDate||'', tgl: r.tanggal||r.tgl||''
     }));
     Cache.saveDataIn(dataIn); Cache.saveDataOut(dataOut); updateCacheInfo();
     updateTabCounts(); populatePengirim(); applyFilterIn(); populateTujuan(); applyFilterOut();
@@ -1725,17 +1769,95 @@ function updateStatsOut() {
 function renderChartIn() {
   const isDark=document.documentElement.getAttribute('data-theme')==='dark';
   const tickColor=isDark?'#8b949e':'#64748b', gridColor=isDark?'#30363d':'#f1f5f9';
-  const c={belum:dataIn.filter(d=>d.status==='Belum').length,proses:dataIn.filter(d=>d.status==='Proses').length,selesai:dataIn.filter(d=>d.status==='Selesai').length};
-  if (chartIn) { chartIn.data.datasets[0].data=[c.belum,c.proses,c.selesai]; chartIn.update(); return; }
-  chartIn=new Chart($('myChart').getContext('2d'),{type:'bar',data:{labels:['Belum','Sedang Diproses','Selesai'],datasets:[{data:[c.belum,c.proses,c.selesai],backgroundColor:['#fed7aa','#fde68a','#bbf7d0'],borderColor:['#ea580c','#d97706','#16a34a'],borderWidth:2,borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1,font:{family:'Plus Jakarta Sans',size:10},color:tickColor},grid:{color:gridColor}},x:{ticks:{font:{family:'Plus Jakarta Sans',size:10},color:tickColor},grid:{display:false}}}}});
+  const filterVal=$('chart-in-filter')?$('chart-in-filter').value:'all';
+  const chartType=$('chart-in-type')?$('chart-in-type').value:'bar';
+  const late=dataIn.filter(d=>d.status!=='Selesai'&&deadlineDays(d.deadline)!==null&&deadlineDays(d.deadline)<0).length;
+  const allData={
+    belum:dataIn.filter(d=>d.status==='Belum').length,
+    proses:dataIn.filter(d=>d.status==='Proses').length,
+    selesai:dataIn.filter(d=>d.status==='Selesai').length,
+    terlambat:late
+  };
+  let labels,values,bgColors,bdColors;
+  if(filterVal==='all'){
+    labels=['Belum','Sedang Diproses','Selesai','Terlambat'];
+    values=[allData.belum,allData.proses,allData.selesai,allData.terlambat];
+    bgColors=['#fed7aa','#fde68a','#bbf7d0','#fecdd3'];
+    bdColors=['#ea580c','#d97706','#16a34a','#e11d48'];
+  } else if(filterVal==='Belum'){
+    labels=['Belum'];values=[allData.belum];bgColors=['#fed7aa'];bdColors=['#ea580c'];
+  } else if(filterVal==='Proses'){
+    labels=['Sedang Diproses'];values=[allData.proses];bgColors=['#fde68a'];bdColors=['#d97706'];
+  } else {
+    labels=['Selesai'];values=[allData.selesai];bgColors=['#bbf7d0'];bdColors=['#16a34a'];
+  }
+  const commonOpts={
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{display:chartType==='doughnut',position:'bottom',labels:{font:{family:'Plus Jakarta Sans',size:10},padding:10,usePointStyle:true}},
+      tooltip:{enabled:true,backgroundColor:isDark?'#1c2128':'#1e293b',titleFont:{family:'Plus Jakarta Sans',size:11,weight:'700'},bodyFont:{family:'Plus Jakarta Sans',size:11},padding:10,cornerRadius:8,callbacks:{label:ctx=>`  ${ctx.label}: ${ctx.parsed.y??ctx.parsed} surat`}}
+    }
+  };
+  if(chartIn){chartIn.destroy();chartIn=null;}
+  chartIn=new Chart($('myChart').getContext('2d'),{
+    type:chartType,
+    data:{labels,datasets:[{data:values,backgroundColor:bgColors,borderColor:bdColors,borderWidth:2,borderRadius:chartType==='bar'?8:0,hoverOffset:chartType==='doughnut'?8:0}]},
+    options:{...commonOpts,...(chartType==='bar'?{scales:{y:{beginAtZero:true,ticks:{stepSize:1,font:{family:'Plus Jakarta Sans',size:10},color:tickColor},grid:{color:gridColor}},x:{ticks:{font:{family:'Plus Jakarta Sans',size:10},color:tickColor},grid:{display:false}}}}:{})}
+  });
 }
 function renderChartOut() {
   const isDark=document.documentElement.getAttribute('data-theme')==='dark';
   const tickColor=isDark?'#8b949e':'#64748b', gridColor=isDark?'#30363d':'#f1f5f9';
-  const c={draft:dataOut.filter(d=>d.status==='Draft').length,terkirim:dataOut.filter(d=>d.status==='Terkirim').length,selesai:dataOut.filter(d=>d.status==='Selesai').length};
-  if (chartOut) { chartOut.data.datasets[0].data=[c.draft,c.terkirim,c.selesai]; chartOut.update(); return; }
-  chartOut=new Chart($('k-myChart').getContext('2d'),{type:'bar',data:{labels:['Draft','Terkirim','Selesai'],datasets:[{data:[c.draft,c.terkirim,c.selesai],backgroundColor:['#e2e8f0','#dbeafe','#bbf7d0'],borderColor:['#64748b','#3b82f6','#16a34a'],borderWidth:2,borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{stepSize:1,font:{family:'Plus Jakarta Sans',size:10},color:tickColor},grid:{color:gridColor}},x:{ticks:{font:{family:'Plus Jakarta Sans',size:10},color:tickColor},grid:{display:false}}}}});
+  const filterVal=$('chart-out-filter')?$('chart-out-filter').value:'all';
+  const chartType=$('chart-out-type')?$('chart-out-type').value:'bar';
+  const late=dataOut.filter(d=>d.status!=='Selesai'&&deadlineDays(d.deadline)!==null&&deadlineDays(d.deadline)<0).length;
+  const allData={
+    draft:dataOut.filter(d=>d.status==='Draft').length,
+    terkirim:dataOut.filter(d=>d.status==='Terkirim').length,
+    selesai:dataOut.filter(d=>d.status==='Selesai').length,
+    terlambat:late
+  };
+  let labels,values,bgColors,bdColors;
+  if(filterVal==='all'){
+    labels=['Draft','Terkirim','Selesai','Terlambat'];
+    values=[allData.draft,allData.terkirim,allData.selesai,allData.terlambat];
+    bgColors=['#e2e8f0','#dbeafe','#bbf7d0','#fecdd3'];
+    bdColors=['#64748b','#3b82f6','#16a34a','#e11d48'];
+  } else if(filterVal==='Draft'){
+    labels=['Draft'];values=[allData.draft];bgColors=['#e2e8f0'];bdColors=['#64748b'];
+  } else if(filterVal==='Terkirim'){
+    labels=['Terkirim'];values=[allData.terkirim];bgColors=['#dbeafe'];bdColors=['#3b82f6'];
+  } else {
+    labels=['Selesai'];values=[allData.selesai];bgColors=['#bbf7d0'];bdColors=['#16a34a'];
+  }
+  const commonOpts={
+    responsive:true,maintainAspectRatio:false,
+    plugins:{
+      legend:{display:chartType==='doughnut',position:'bottom',labels:{font:{family:'Plus Jakarta Sans',size:10},padding:10,usePointStyle:true}},
+      tooltip:{enabled:true,backgroundColor:isDark?'#1c2128':'#1e293b',titleFont:{family:'Plus Jakarta Sans',size:11,weight:'700'},bodyFont:{family:'Plus Jakarta Sans',size:11},padding:10,cornerRadius:8,callbacks:{label:ctx=>`  ${ctx.label}: ${ctx.parsed.y??ctx.parsed} surat`}}
+    }
+  };
+  if(chartOut){chartOut.destroy();chartOut=null;}
+  chartOut=new Chart($('k-myChart').getContext('2d'),{
+    type:chartType,
+    data:{labels,datasets:[{data:values,backgroundColor:bgColors,borderColor:bdColors,borderWidth:2,borderRadius:chartType==='bar'?8:0,hoverOffset:chartType==='doughnut'?8:0}]},
+    options:{...commonOpts,...(chartType==='bar'?{scales:{y:{beginAtZero:true,ticks:{stepSize:1,font:{family:'Plus Jakarta Sans',size:10},color:tickColor},grid:{color:gridColor}},x:{ticks:{font:{family:'Plus Jakarta Sans',size:10},color:tickColor},grid:{display:false}}}}:{})}
+  });
 }
+function onChartInTypeChange(){renderChartIn();}
+function onChartInFilterChange(){renderChartIn();}
+function onChartOutTypeChange(){renderChartOut();}
+function onChartOutFilterChange(){renderChartOut();}
+
+// Auto-resize charts on window resize
+let _chartResizeTimer=null;
+window.addEventListener('resize',()=>{
+  clearTimeout(_chartResizeTimer);
+  _chartResizeTimer=setTimeout(()=>{
+    if(chartIn){chartIn.resize();}
+    if(chartOut){chartOut.resize();}
+  },150);
+});
 
 // ════════════════════════════════════════
 // 27. WARNINGS
@@ -1796,7 +1918,7 @@ function fileBtn(d) {
 function renderTableIn() {
   $('rc-in').textContent=filteredIn.length+' surat';
   const tb=$('tbody-in');
-  if(!filteredIn.length){tb.innerHTML=`<tr class="empty"><td colspan="10">📭 Tidak ada data surat masuk</td></tr>`;renderPagination(0,pageIn,perPageIn,'pg-info-in','pg-controls-in','goPageIn');return;}
+  if(!filteredIn.length){tb.innerHTML=`<tr class="empty"><td colspan="11">📭 Tidak ada data surat masuk</td></tr>`;renderPagination(0,pageIn,perPageIn,'pg-info-in','pg-controls-in','goPageIn');return;}
   const start=(pageIn-1)*perPageIn;
   tb.innerHTML=filteredIn.slice(start,start+perPageIn).map((d,i)=>{
     const days=deadlineDays(d.deadline);
@@ -1807,6 +1929,7 @@ function renderTableIn() {
       <td class="mono" style="color:var(--muted);white-space:nowrap">${fmtTgl(d.tgl||d.tanggal||'')}</td>
       <td style="font-size:11.5px;max-width:140px">${Security.sanitize(d.pengirim)}</td>
       <td style="max-width:160px;font-size:11.5px">${Security.sanitize(d.perihal)}</td>
+      <td style="font-size:11.5px" data-col="sifat">${Security.sanitize(d.sifat||'-')}</td>
       <td style="font-size:11.5px">${Security.sanitize(d.disposisi||'—')}</td>
       <td>${badgeIn(d.status)}</td>
       <td>${dlBadge(d.deadline,d.status)}</td>
